@@ -10,30 +10,6 @@ const sideBarTool = {
    * @param {Array} SuffixIncludes 需要处理的文件后缀
    * @param {Object} param3 暂未用上(分组相关配置参数)
    * @returns {Array} 返回一个数组,如下所示
-   * [{
-   *  "title": "",
-   *  "collapsable": true,
-   *  "sidebarDepth": 2,
-   *  "children": ["/view/"]
-   *   },
-   *  {
-   *  "title": "GFW",
-   *   "collapsable": true,
-   *   "sidebarDepth": 2,
-   *  "children": ["/view/GFW/"]
-   *  },
-   *  {
-   *  "title": "html",
-   *  "collapsable": true,
-   *  "sidebarDepth": 2,
-   *  "children": [
-   *      ["/view/html/day1", "day1"],
-   *      ["/view/html/day2", "day2"],
-   *      ["/view/html/day3", "day3"],
-   *      ["/view/html/day4", "day4"],
-   *      ["/view/html/day5", "day5"]
-   *    ]
-   * }]
    */
   getSideBarGroup: (
     RootPath,
