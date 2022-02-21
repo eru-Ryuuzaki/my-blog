@@ -39,6 +39,22 @@ fs.writeFile("./finallysidebar.txt", JSON.stringify(sidebar), (err) => {
 });
 
 module.exports = {
+  // 数据统计
+  head: [
+    [
+      "script",
+      {},
+      `
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3a4f17ab81c4094e382bf19a13b55dc2";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    `,
+    ],
+  ],
   title: "个人笔记",
   description: "...", // 这个不知道干嘛的
   // 配置主题（需要安装依赖 npm install vuepress-theme-reco --save-dev）
