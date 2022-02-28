@@ -17,10 +17,11 @@ const myNavConf = [
         text: "力扣",
         link: "https://leetcode-cn.com/u/camille_ferros/",
       },
-      {
-        text: "掘金",
-        link: "https://juejin.cn/user/3316549695047431",
-      },
+      // 掘金写的太少了，还是先不放了QAQ
+      // {
+      //   text: "掘金",
+      //   link: "https://juejin.cn/user/3316549695047431",
+      // },
     ],
   },
 ];
