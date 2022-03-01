@@ -51,15 +51,135 @@ highlight: a11y-light
         alert( "foo" ); 
     }
     ```
-2. 代表的含义：
     
+2. 代表的含义：
+   
     + 上面这两段示例代码的意思都是“创建一个名为`foo`的函数”（函数也是对象）。
+    
 3. 创建时机：
     + 函数声明：**解析器在向执行环境中加载数据时会率先读取函数声明，并使其在执行任何代码之前可用(可访问)，即函数声明提升。函数声明的另外一个特殊的功能是它们的块级作用域。严格模式下，当一个函数声明在一个代码块内时，它在该代码块内的任何位置都是可见的。但在代码块外不可见。**
     + 函数表达式：**在代码执行到表达式时被创建，被创建之前是调用不了的。**
 
     
+    
+    
+    
+### js 遍历数组有哪些方法
+
++  for 
+
+  ```javascript
+  for (let i = 0; i < arr.length; i++) {
+  	// ......
+  }
+  ```
+
++ forEach（没有返回值，不改变原数组）
+
+  ```javascript
+  arr.forEach((item, index, array) => {
+      // ......
+  })
+  ```
+
++ map（返回一个操作后新的数组，不改变原数组）
+
+  ```javascript
+  var arr = [12,23,24,42,1]; 
+  var res = arr.map(function (item, index, array) { 
+      return item * 10; 
+  }) 
+  console.log(res);//-->[120,230,240,420,10];  原数组拷贝了一份，并进行了修改
+  console.log(ary);//-->[12,23,24,42,1]；  原数组并未发生变化
+  ```
+
++ reduce (用法挺多，不改变原数组，返回操作结果)
+
+  ```javascript
+  let total = [0,1,2,3,4].reduce((a, b)=>a + b); //10
+  ```
+
+  类似的还有 reduceRight 方法，不同的是一个从左边开始操作，一个从右边开始操作
+
++ filter（返回一个数组中符合某些条件的元素，不改变原数组）
+
+  ```javascript
+  var arr = [73, 84, 56, 22, 100]
+  var newArr = arr.filter(item => item > 80)   //得到新数组 [84, 100]
+  console.log(newArr, arr)
+  ```
+
++ every (如果数组中每个元素都符合条件，则返回 true)
+
+  ```javascript
+  var arr = [ 1, 2, 3, 4, 5, 6 ]; 
+  console.log( arr.every( function( item, index, array ){ 
+          return item > 3; 
+      })); 
+  // false
+  ```
+
++ some (只要数组中存在一个以上的元素符合条件，则返回 true)
+
+  ```javascript
+  var arr = [ 1, 2, 3, 4, 5, 6 ]; 
+     
+  console.log( arr.some( function( item, index, array ){ 
+    return item > 3; 
+  })); 
+  // true
+  ```
+
++ find (返回数组中符合测试函数条件的第一个元素, 没有则返回undefined)
+
+  ```javascript
+  var stu = [
+      {
+          name: '张三',
+          gender: '男',
+          age: 20
+      },
+      {
+          name: '王小毛',
+          gender: '男',
+          age: 20
+      },
+      {
+          name: '李四',
+          gender: '男',
+          age: 20
+      }
+  ]
+  stu.find((element) => (element.name == '李四'))
+  //{name: "李四", gender: "男", age: 20}
+  ```
+
+  类似的还有 findIndex 方法，find 返回的是 value，findIndex 返回的是 key（数组下标）
+
++ keys (对键名遍历)、values (对键值遍历)，entries (对键值对遍历)，三个方法返回的都是一个遍历器对象
+
+  ```javascript
+  for (let index of ['a', 'b'].keys()) {
+  	console.log(index);
+  }
+  // 0
+  // 1
+  for (let elem of ['a', 'b'].values()) {
+  	console.log(elem);
+  }
+  // 'a'
+  // 'b'
+  for (let [index, elem] of ['a', 'b'].entries()) {
+  	console.log(index, elem);
+  }
+  // 0 "a"
+  // 1 "b"
+  ```
+
+  
+
 # 一些比较重要的 API
+
 ### reduce
 >reduce() 方法接收一个函数作为累加器，数组中的每个值（从左到右）开始缩减，不包括数组中被删除或从未被赋值的元素，最终计算为一个值。reduce() 可以作为一个高阶函数，用于函数的 compose。**注意:  reduce() 对于空数组是不会执行回调函数的。**
 >`累加器`: 累加器 (accumulator) 是一种寄存器，用来储存计算产生的中间结果。
@@ -70,6 +190,9 @@ highlight: a11y-light
     arr.reduce(callback(accumulator, currentValue[,index[,array]])[, initialValue]);
 
  
+
+
+
 
 #### 参数说明
 
