@@ -8,7 +8,14 @@ const { mySiderbarConf, myNavConf } = require("./myconf");
 const { AtoO } = require("./utils/arr_to_obj");
 
 // 需要排除的一些目录
-const unDirIncludes = ["node_modules", "assets", "public", ".vuepress", "test"];
+const unDirIncludes = [
+  "node_modules",
+  "assets",
+  "public",
+  ".vuepress",
+  "test",
+  "其他",
+];
 // 只需要处理后缀的文件类型
 const SuffixIncludes = ["md", "html"];
 // 自动生成侧边栏配置
