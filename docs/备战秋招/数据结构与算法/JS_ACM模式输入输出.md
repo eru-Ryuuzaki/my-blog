@@ -15,6 +15,7 @@
 ## V8
 
 ```javascript
+// line 是自己定义的用来接收输入的变量
 while(line=readline()){
     var lines = line.split(' ');  //字符串转换为字符数组
     var a = parseInt(lines[0]);

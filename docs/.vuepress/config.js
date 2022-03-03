@@ -15,6 +15,7 @@ const unDirIncludes = [
   ".vuepress",
   "test",
   "其他",
+  "踩坑记录",
 ];
 // 只需要处理后缀的文件类型
 const SuffixIncludes = ["md", "html"];
