@@ -27,6 +27,8 @@ theme: channing-cyan
 
 是每一次调用返回的结果进行再次调用而不是都作用于一开始的对象
 
+> PS：promise 为啥返回一个 promise 对象才能继续 .then 调用不也是这样吗~
+
 ```js
 let a = [1, 2, 3, 4, 5, 6]
 let b = a.slice(2, 4).forEach(v => {
@@ -115,7 +117,7 @@ let b = a.slice(2, 4).forEach(v => {
   function getUrlParam2(sUrl, sKey) {
       var result, Oparam = {};
       // $0 表示的是整一块匹配的子串, $1、$2...... 这些才是分组的子串
-      sUrl.replace(/[\?&]?(\w+)=(\w+)/g, function ($0, $1, $2) 
+      sUrl.replace(/[\?&]?(\w+)=(\w+)/g, function ($0, $1, $2) {
           console.log('$0:' + $0 + "     $1:" + $1 + "     $2:" + $2);
           Oparam[$1] === void 0 ? Oparam[$1] = $2 : Oparam[$1] = [].concat(Oparam[$1], $2);
       });

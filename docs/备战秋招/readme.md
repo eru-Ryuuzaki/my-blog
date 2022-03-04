@@ -66,62 +66,62 @@
 
 
 状态码	原因	说明
-100-199	信息响应	
-100	Continue	已收到请求，客户端应继续
-101	Switching Protocol	响应客户端Upgrade列出协议，服务端正在切换协议
-102	Processing	服务端正在处理请求，无响应可用
-103	Early Hints	与Link一起使用，客户端应在服务端继续响应前开始预加载资源
-200-299	成功响应	
-200	OK	请求成功，常见于GETHEADPOSTTRACE
-201	Created	请求成功，新资源已创建，常见于POSTPUT
-202	Accepted	请求已收到，但未响应
-203	Non-Authoritative Information	响应经过了代理服务器修改
-204	No Content	请求已处理，无返回，客户端不更新视图
-205	Reset Content	请求已处理，无返回，客户端应更新视图
-206	Partial Content	请求已处理，返回部分内容，常见于视频点播、分段下载、断点续传
-300-399	重定向	
-300	Multiple Choice	提供一系列地址供客户端选择重定向
-301	Moved Permanently	永久重定向，默认可缓存，搜索引擎应更新链接
-302	Found	临时重定向，默认不缓存，除非显示指定
-303	See Other	临时重定向，必须GET请求
-304	Not Modified	未修改，不含响应体
-307	Temporary Redirect	临时重定向，默认不缓存，除非显示指定，不改变请求方法和请求体
-308	Permanent Redirect	永久重定向，默认可缓存，搜索引擎应更新链接，不改变请求方法和请求体
-400-499	客户端错误	
-400	Bad Request	请求语义或参数有误，不应重复请求
-401	Unauthorized	请求需身份验证或验证失败
-403	Forbidden	拒绝，不应重复请求
-404	Not Found	未找到，无原因
-405	Method Not Allowed	不允许的请求方法，并返回Allow允许的请求方法列表
-406	Not Acceptable	无法根据请求条件，返回响应体
-407	Proxy Authentication Required	请求需在代理服务器上身份验证
-408	Request Timeout	请求超时
-409	Conflict	请求冲突，响应应包含冲突原因
-410	Gone	资源已被永久移除
-411	Length Required	请求头需添加Content-Length
-412	Precondition Failed	非GETPOST请求外，If-Unmodified-Since或If-None-Match规定先决条件无法满足
-413	Payload Too Large	请求体数据大小超过服务器处理范围
-414	URI Too Long	URL过长，查询字符串过长时，应使用POST请求
-415	Unsupported Media Type	请求文件类型服务端不支持
-416	Range Not Satisfiable	请求头Range与资源可用范围不重合
-417	Expectation Failed	服务端无法满足客户端通过Expect设置的期望响应
-421	Misdirected Request	HTTP2下链接无法复用时返回
-425	Too Early	请求有重放攻击风险
-426	Upgrade Required	客端应按响应头Upgrade的协议列表中的协议重新请求
-428	Precondition Required	没有符合If-Match的资源
-429	Too Many Requests	请求频次超过服务端限制
-431	Request Header Fields Too Large	请求头字段过大
-451	Unavailable For Legal Reasons	因法律原因该资源不可用
-500-511	服务端响应	
-500	Internal Server Error	服务端报错，通常是脚本错误
-501	Not Implemented	请求方法不被服务器支持
-502	Bad Gateway	网关无响应，通常是服务端环境配置错误
-503	Service Unavailable	服务端临时不可用，建议返回Retry-After，搜索引擎爬虫应一段时间再次访问这个URL
-504	Gateway Timeout	网关超时，通常是服务端过载
-505	HTTP Version Not Supported	请求的 HTTP 协议版本不被支持
-506	Variant Also Negotiates	内部服务器配置错误
-510	Not Extended	不支持 HTTP 扩展
-511	Network Authentication Required	需要身份验证，常见于公用 WIFI
+100-199	信息响应	</br>
+100	Continue	已收到请求，客户端应继续</br>
+101	Switching Protocol	响应客户端Upgrade列出协议，服务端正在切换协议</br>
+102	Processing	服务端正在处理请求，无响应可用</br>
+103	Early Hints	与Link一起使用，客户端应在服务端继续响应前开始预加载资源</br>
+200-299	成功响应	</br>
+200	OK	请求成功，常见于GETHEADPOSTTRACE</br>
+201	Created	请求成功，新资源已创建，常见于POSTPUT</br>
+202	Accepted	请求已收到，但未响应</br>
+203	Non-Authoritative Information	响应经过了代理服务器修改</br>
+204	No Content	请求已处理，无返回，客户端不更新视图</br>
+205	Reset Content	请求已处理，无返回，客户端应更新视图</br>
+206	Partial Content	请求已处理，返回部分内容，常见于视频点播、分段下载、断点续传</br>
+300-399	重定向	</br>
+300	Multiple Choice	提供一系列地址供客户端选择重定向</br>
+301	Moved Permanently	永久重定向，默认可缓存，搜索引擎应更新链接</br>
+302	Found	临时重定向，默认不缓存，除非显示指定</br>
+303	See Other	临时重定向，必须GET请求</br>
+304	Not Modified	未修改，不含响应体</br>
+307	Temporary Redirect	临时重定向，默认不缓存，除非显示指定，不改变请求方法和请求体</br>
+308	Permanent Redirect	永久重定向，默认可缓存，搜索引擎应更新链接，不改变请求方法和请求体</br>
+400-499	客户端错误	</br>
+400	Bad Request	请求语义或参数有误，不应重复请求</br>
+401	Unauthorized	请求需身份验证或验证失败</br>
+403	Forbidden	拒绝，不应重复请求</br>
+404	Not Found	未找到，无原因</br>
+405	Method Not Allowed	不允许的请求方法，并返回Allow允许的请求方法列表</br>
+406	Not Acceptable	无法根据请求条件，返回响应体</br>
+407	Proxy Authentication Required	请求需在代理服务器上身份验证</br>
+408	Request Timeout	请求超时</br>
+409	Conflict	请求冲突，响应应包含冲突原因</br>
+410	Gone	资源已被永久移除</br>
+411	Length Required	请求头需添加Content-Length</br>
+412	Precondition Failed	非GETPOST请求外，If-Unmodified-Since或If-None-Match规定先决条件无法满足</br>
+413	Payload Too Large	请求体数据大小超过服务器处理范围</br>
+414	URI Too Long	URL过长，查询字符串过长时，应使用POST请求</br>
+415	Unsupported Media Type	请求文件类型服务端不支持</br>
+416	Range Not Satisfiable	请求头Range与资源可用范围不重合</br>
+417	Expectation Failed	服务端无法满足客户端通过Expect设置的期望响应</br>
+421	Misdirected Request	HTTP2下链接无法复用时返回</br>
+425	Too Early	请求有重放攻击风险</br>
+426	Upgrade Required	客端应按响应头Upgrade的协议列表中的协议重新请求</br>
+428	Precondition Required	没有符合If-Match的资源</br>
+429	Too Many Requests	请求频次超过服务端限制</br>
+431	Request Header Fields Too Large	请求头字段过大</br>
+451	Unavailable For Legal Reasons	因法律原因该资源不可用</br>
+500-511	服务端响应	</br>
+500	Internal Server Error	服务端报错，通常是脚本错误</br>
+501	Not Implemented	请求方法不被服务器支持</br>
+502	Bad Gateway	网关无响应，通常是服务端环境配置错误</br>
+503	Service Unavailable	服务端临时不可用，建议返回Retry-After，搜索引擎爬虫应一段时间再次访问这个URL</br>
+504	Gateway Timeout	网关超时，通常是服务端过载</br>
+505	HTTP Version Not Supported	请求的 HTTP 协议版本不被支持</br>
+506	Variant Also Negotiates	内部服务器配置错误</br>
+510	Not Extended	不支持 HTTP 扩展</br>
+511	Network Authentication Required	需要身份验证，常见于公用 WIFI</br>
 
 
 
@@ -149,7 +149,7 @@
 
 ### http 各版本对比
 
-HTTP1.0
+#### HTTP1.0
 无状态，无连接的应用层协议
 
 无法复用连接
@@ -168,7 +168,7 @@ HTTP1.1 继承了 HTTP1.0 简单，克服了 HTTP1.0 性能上的问题
 断点续传
 主机头
 新增Host字段，使得一个服务器创建多个站点
-HTTP2.0
+#### HTTP2.0
 HTTP2.0进一步改善了传输性能
 
 二进制分帧
@@ -179,7 +179,7 @@ HTTP2.0进一步改善了传输性能
 压缩算法编码原来纯文本发送的请求头，通讯双方各自缓存一份头部元数据表，避免传输重复头
 服务器推送
 服务端可主动向客户端推送资源，无需客户端请求
-HTTP3.0
+#### HTTP3.0
 当一个 TCP 会丢包时，整个会话都要等待重传，后面数据都被阻塞。这是由于 TCP 本身的局限性导致的。HTTP3.0 基于 UDP 协议，解决 TCP 的局限性
 
 0-RTT
