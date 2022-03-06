@@ -63,6 +63,8 @@ CSS选择器包括行内样式、`id`选择器、`class`选择器、标签选择
     
     [Flex 布局教程:实例篇](https://www.ruanyifeng.com/blog/2015/07/flex-examples.html)
     
+    + flex: 1 代表着什么
+    
 2.  **定位**
     
     + *子绝父相*
@@ -72,3 +74,4 @@ CSS选择器包括行内样式、`id`选择器、`class`选择器、标签选择
         也就是说top、right、bottom、left是为相对定位/绝对定位而生的。 
         
         子绝父相就是：子元素为绝对定位(position：absolute;)，父元素为相对定位position：relative;。例如A为子元素，那么父元素B必须包含A，也就是说AB一定是嵌套关系(父子关系),不可以是兄弟关系。
+

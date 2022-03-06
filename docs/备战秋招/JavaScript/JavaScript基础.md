@@ -194,6 +194,7 @@ highlight: a11y-light
 
 
 
+
 #### 参数说明
 
 + callback （执行数组中每个值的函数，包含四个参数）
@@ -284,14 +285,26 @@ return pre + cur;
 console.log(sum); // 10
 ```
 
+### 事件捕获 & 事件冒泡
+
+![capture](./img/capture.jpg)
+
 ### addEventListener 函数的第三个参数可以是什么？
+
 + 当为 boolean 时：
-    + 第三个参数涉及到是冒泡还是捕获：为 true 时是捕获，为 false 时是冒泡。
+    + 第三个参数涉及到是冒泡还是捕获的时候触发事件：为 true 时是捕获，为 false 时是冒泡。
 + 当为 Object 时：
     + capture： Boolean，表示 listener 会在该类型的事件捕获阶段传播到该 EventTarget 时触发。
     + once： Boolean，表示 listener 在添加之后最多只调用一次。如果是 true， listener 会在其被调用之后自动移除。
     + passive：Boolean，设置为 true 时，表示 listener 永远不会调用 preventDefault()。如果 listener 仍然调用了这个函数，客户端将会忽略它并抛出一个控制台警告。
     + mozSystemGroup：只能在 XBL 或者是 Firefox' chrome 使用，这是个 Boolean，表示 listener 被添加到 system group。
     
+
+### addEventListener 和 on 的区别是什么？
+
++ addEventListener 可以给一个事件注册多个listener，而on在同一时间只能指向唯一对象。
++ addEventListener对任何DOM都是有效的，而onclick仅限于HTML。（这句话不是很理解，是在说XHTML这些？）
++ on 事件解绑需要将其置为none，而addEventListener需要使用removeEventListener。
+
 ### 前端模块化
 #### 推荐阅读： [写给前端新手看的一些模块化知识](https://juejin.cn/post/7026992093016883207)
