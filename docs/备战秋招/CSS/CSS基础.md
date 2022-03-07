@@ -56,15 +56,26 @@ CSS选择器包括行内样式、`id`选择器、`class`选择器、标签选择
 
 ### 布局
 1. **flex 布局**
-   
+
     此处个人推荐阮一峰大大的博客，个人学习的 flex 基础知识都是从上面学的~
-    
+
     [Flex 布局教程:语法篇](https://www.ruanyifeng.com/blog/2015/07/flex-grammar.html)
-    
+
     [Flex 布局教程:实例篇](https://www.ruanyifeng.com/blog/2015/07/flex-examples.html)
-    
+
     + flex: 1 代表着什么
-    
+
+      `flex:1` 为：`flex: 1 1 0;`
+      
+      - 第一个参数表示: **flex-grow 定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大**
+      - 第二个参数表示: **flex-shrink 定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小**
+      - 第三个参数表示: **flex-basis** **给上面两个属性分配多余空间之前, 计算项目是否有多余空间, 默认值为 auto, 即项目本身的大小**
+      
+      > 数值 1 设置的是 flex-grow，flex-shrink没设置的时候默认值是1，和初始值一样的；
+      >  特殊在于flex-basis，初始值为 auto 那常规思路没设置就采用默认值则：`flex:1 === flex:1 1 auto`;
+      >  但[MDN](https://link.juejin.cn?target=https%3A%2F%2Fdeveloper.mozilla.org%2Fzh-CN%2Fdocs%2FWeb%2FCSS%2Fflex)给了定义一个值的时候的解释，如果flex只定义了一个数字值，则 flex-basis 的值为 0；
+      >  所以：`flex:1` 为：`flex: 1 1 0`;
+
 2.  **定位**
     
     + *子绝父相*
