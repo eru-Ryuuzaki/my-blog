@@ -44,6 +44,36 @@ theme: channing-cyan
 >
 >   它的侵入性看似没有Angular那么强，主要因为它是属于软性侵入的
 
+### MVC 和 MVVM 模式的区别
+
+#### MVC 即模型、视图、控制器（Model View Controller）
+
+> 简单来说就是通过controller的控制去操作model层的数据，并且返回给view层展示。**controller**在这里执行的的就是别墅里面的“**管家**”的作用。
+
+- View 接受用户交互请求
+- View 将请求转交给Controller处理
+- Controller 操作Model进行数据更新保存
+- 数据更新保存之后，Model会通知View更新
+- View 更新变化数据使用户得到反馈
+
+#### MVVM 即模型、视图、视图模型（Model-View-ViewModel），**ViewModel**是MVVM这栋别墅的“**管家**”
+
+- View 接收用户交互请求
+- View 将请求转交给ViewModel
+- ViewModel 操作Model数据更新
+- Model 更新完数据，通知ViewModel数据发生变化
+- ViewModel 更新View数据
+
+> MVVM设计模式是自动化的，vue就是采取了这种设计模式，真正把数据和视图分离开的是MVVM模式，并不是MVC，因为controller当中有大量手工的DOM操作，只要界面改变，controller中的代码必须要更改（jquery），比如你可以想象一下，你页面当中元素的位置变了，你的选择器是不是肯定要变，选择器就写在DOM操作里面，这就是MVC和MVVM两种设计模式的区别。
+
+### vue 双向绑定原理（数据劫持+发布订阅模式）
+
+> Vue 最独特的特性之一，是其非侵入性的响应式系统。数据模型仅仅是普通的 JavaScript 对象。而当你修改它们时，视图会进行更新。
+>
+> 注意：由于 JavaScript 的限制，Vue **不能检测**数组和对象的变化。尽管如此我们还是有一些办法来回避这些限制并保证它们的响应性。（不过只是 vue2 有这个限制，vue2 使用的是 Object.defineProperty 来进行数据劫持；vue3 使用了 **Proxy** 的方式来进行数据劫持，数组和对象的变化也能检测）
+
+![vue-v-model](./img/vue-v-model.png)
+
 ### vue 的 Scoped 原理
 Vue的作用域样式 Scoped CSS 的实现思路如下：
 
