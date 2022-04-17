@@ -16,9 +16,9 @@ CSS选择器包括行内样式、`id`选择器、`class`选择器、标签选择
 
 + 样式类型
 
-    + 行内样式：`<style></style>`
+    + 行内样式：`<div style="color:red;">`
 
-    + 内联样式：`<div style="color:red;">`
+    + 内联样式：`<style></style>`
 
     + 外部样式：`<link>或@import引入`
 
