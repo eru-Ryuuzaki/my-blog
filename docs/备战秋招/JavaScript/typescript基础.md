@@ -665,3 +665,237 @@ if (typeof mayNullOrUndefinedOrString === 'string') {
 在上述 add1 函数中，我们 return 了变量 a + b 的结果，因为 a 和 b 的类型为 number，所以函数返回类型被推断为 number。
 
 当然，拥有默认值的函数参数的类型也能被推断出来。比如上述 add2 函数中，b 参数被推断为 number | undefined 类型，如果我们给 b 参数传入一个字符串类型的值，由于函数参数类型不一致，此时编译器就会抛出一个 ts(2345) 错误。
+
+#### 上下文推断
+
+通过类型推断的例子，我们发现变量的类型可以通过被赋值的值进行推断。除此之外，在某些特定的情况下，我们也可以通过变量所在的上下文环境推断变量的类型，具体示例如下：
+
+```js
+{
+
+  type Adder = (a: number, b: number) => number;
+
+  const add: Adder = (a, b) => {
+
+    return a + b;
+
+  }
+
+  const x1 = add(1, 1); // 推断出 x1 类型是 number
+
+  const x2 = add(1, '1');  // ts(2345) Argument of type '"1"' is not assignable to parameter of type 'number
+
+}
+```
+
+这里我们定义了一个实现加法功能的**函数类型 Adder**（定义的 Adder 类型使用了 type 类型别名），声明了**add**变量的类型为 Adder 并赋值一个匿名箭头函数，箭头函数参数 a 和 b 的类型和返回类型都没有显式声明。
+
+TypeScript 通过**add**的类型 Adder 反向（通过变量类型推断出值的相关类型）推断出箭头函数参数及返回值的类型，也就是说函数参数 a、b，以及返回类型在这个变量的声明上下文中被确定了。
+
+正是得益于 TypeScript 这种类型推导机制和能力，使得我们无须显式声明，即可直接通过上下文环境推断出变量的类型，也就是说此时类型可缺省。
+
+下面回头看最前面的示例（如下所示），我们发现这些缺省类型注解的变量还可以通过类型推断出类型。
+
+```js
+{
+  let str = 'this is string'; // str: string
+  let num = 1; // num: number
+  let bool = true; // bool: boolean
+}
+{
+  const str = 'this is string'; // str: 'this is string'
+  const num = 1; // num: 1
+  const bool = true; // bool: true
+}
+```
+
+如上述代码中注释说明，通过 let 和 const 定义的赋予了相同值的变量，其推断出来的类型不一样。比如同样是 'this is string'（这里表示一个字符串值），通过 let 定义的变量类型是 string，而通过 const 定义的变量类型是 'this is string'（这里表示一个字符串字面量类型）。这里我们可以通过 VS Code hover 示例中的变量查看类型，验证一下这个结论。
+
+#### 字面量类型
+
+在 TypeScript 中，字面量不仅可以表示值，还可以表示类型，即所谓的字面量类型。
+
+目前，TypeScript 支持 3 种字面量类型：字符串字面量类型、数字字面量类型、布尔字面量类型，对应的字符串字面量、数字字面量、布尔字面量分别拥有与其值一样的字面量类型，具体示例如下：
+
+```js
+{
+
+  let specifiedStr: 'this is string' = 'this is string';
+
+  let specifiedNum: 1 = 1;
+
+  let specifiedBoolean: true = true;
+
+}
+```
+
+字面量类型是集合类型的子类型，它是集合类型的一种更具体的表达。比如 'this is string' （这里表示一个字符串字面量类型）类型是 string 类型（确切地说是 string 类型的子类型），而 string 类型不一定是 'this is string'（这里表示一个字符串字面量类型）类型，如下具体示例：
+
+```js
+{
+
+  let specifiedStr: 'this is string' = 'this is string';
+
+  let str: string = 'any string';
+
+  specifiedStr = str; // ts(2322) 类型 '"string"' 不能赋值给类型 'this is string'
+
+  str = specifiedStr; // ok 
+
+}
+```
+
+#### 字符串字面量类型
+
+一般来说，我们可以使用一个字符串字面量类型作为变量的类型，如下代码所示：
+
+```js
+let hello: 'hello' = 'hello';
+hello = 'hi'; // ts(2322) Type '"hi"' is not assignable to type '"hello"'
+```
+
+实际上，定义单个的字面量类型并没有太大的用处，它真正的应用场景是可以把多个字面量类型组合成一个联合类型，用来描述拥有明确成员的实用的集合。
+
+如下代码所示，我们使用字面量联合类型描述了一个明确、可 'up' 可 'down' 的集合，这样就能清楚地知道需要的数据结构了。
+
+```js
+type Direction = 'up' | 'down';
+function move(dir: Direction) {
+  // ...
+}
+move('up'); // ok
+move('right'); // ts(2345) Argument of type '"right"' is not assignable to parameter of type 'Direction'
+```
+
+通过使用字面量类型组合的联合类型，我们可以限制函数的参数为指定的字面量类型集合，然后编译器会检查参数是否是指定的字面量类型集合里的成员。
+
+因此，相较于使用 string 类型，使用字面量类型（组合的联合类型）可以将函数的参数限定为更具体的类型。这不仅提升了程序的可读性，还保证了函数的参数类型，可谓一举两得。
+
+#### 数字字面量类型及布尔字面量类型
+
+数字字面量类型和布尔字面量类型的使用与字符串字面量类型的使用类似，我们可以使用字面量组合的联合类型将函数的参数限定为更具体的类型，比如声明如下所示的一个类型 Config：
+
+```js
+interface Config {
+    size: 'small' | 'big';
+    isEnable:  true | false;
+    margin: 0 | 2 | 4;
+}
+```
+
+在上述代码中，我们限定了 size 属性为字符串字面量类型 'small' | 'big'，isEnable 属性为布尔字面量类型 true | false（布尔字面量只包含 true 和 false，true | false 的组合跟直接使用 boolean 没有区别），margin 属性为数字字面量类型 0 | 2 | 4。
+
+#### Literal Widening
+
+所有通过 let 或 var 定义的变量、函数的形参、对象的非只读属性，如果满足指定了初始值且未显式添加类型注解的条件，那么它们推断出来的类型就是指定的初始值字面量类型拓宽后的类型，这就是字面量类型拓宽。
+
+下面我们通过字符串字面量的示例来理解一下字面量类型拓宽：
+
+```js
+{
+  let str = 'this is string'; // 类型是 string
+  let strFun = (str = 'this is string') => str; // 类型是 (str?: string) => string;
+  const specifiedStr = 'this is string'; // 类型是 'this is string'
+  let str2 = specifiedStr; // 类型是 'string'
+  let strFun2 = (str = specifiedStr) => str; // 类型是 (str?: string) => string;
+}
+```
+
+因为第 2~3 行满足了 let、形参且未显式声明类型注解的条件，所以变量、形参的类型拓宽为 string（形参类型确切地讲是 string | undefined）。
+
+因为第 5 行的常量不可变更，类型没有拓宽，所以 specifiedStr 的类型是 'this is string' 字面量类型。
+
+第 7~8 行，因为赋予的值 specifiedStr 的类型是字面量类型，且没有显式类型注解，所以变量、形参的类型也被拓宽了。其实，这样的设计符合实际编程诉求。我们设想一下，如果 str2 的类型被推断为 'this is string'，它将不可变更，因为赋予任何其他的字符串类型的值都会提示类型错误。
+
+基于字面量类型拓宽的条件，我们可以通过如下所示代码添加显示类型注解控制类型拓宽行为。
+
+```js
+{
+  const specifiedStr: 'this is string' = 'this is string'; // 类型是 '"this is string"'
+  let str2 = specifiedStr; // 即便使用 let 定义，类型是 'this is string'
+}
+```
+
+实际上，除了字面量类型拓宽之外，TypeScript 对某些特定类型值也有类似 "Type Widening" （类型拓宽）的设计，下面我们具体来了解一下。
+
+#### Type Widening
+
+比如对 null 和 undefined 的类型进行拓宽，通过 let、var 定义的变量如果满足未显式声明类型注解且被赋予了 null 或 undefined 值，则推断出这些变量的类型是 any：
+
+```js
+{
+  let x = null; // 类型拓宽成 any
+  let y = undefined; // 类型拓宽成 any
+  /** -----分界线------- */
+  const z = null; // 类型是 null
+  /** -----分界线------- */
+  let anyFun = (param = null) => param; // 形参类型是 null
+  let z2 = z; // 类型是 null
+  let x2 = x; // 类型是 null
+  let y2 = y; // 类型是 undefined
+}
+```
+
+> 注意：在严格模式下，一些比较老的版本中（2.0）null 和 undefined 并不会被拓宽成“any”。因此，某些过时的资料中会存在与课程不一致的解释。
+
+在现代 TypeScript 中，以上示例的第 2~3 行的类型拓宽更符合实际编程习惯，我们可以赋予任何其他类型的值给具有 null 或 undefined 初始值的变量 x 和 y。
+
+示例第 7~10 行的类型推断行为因为开启了 strictNullChecks=true（说明：本课程所有示例都基于严格模式编写），此时我们可以从类型安全的角度试着思考一下：这几行代码中出现的变量、形参的类型为什么是 null 或 undefined，而不是 any？因为前者可以让我们更谨慎对待这些变量、形参，而后者不能。
+
+既然有类型拓宽，自然也会有类型缩小，下面我们简单介绍一下 Type Narrowing。
+
+#### Type Narrowing
+
+在 TypeScript 中，我们可以通过某些操作将变量的类型由一个较为宽泛的集合缩小到相对较小、较明确的集合，这就是 "Type Narrowing"。
+
+比如，我们可以使用类型守卫将函数参数的类型从 any 缩小到明确的类型，具体示例如下：
+
+```js
+{
+  let func = (anything: any) => {
+    if (typeof anything === 'string') {
+      return anything; // 类型是 string 
+    } else if (typeof anything === 'number') {
+      return anything; // 类型是 number
+    }
+    return null;
+  };
+}
+```
+
+在 VS Code 中 hover 到第 4 行的 anything 变量提示类型是 string，到第 6 行则提示类型是 number。
+
+同样，我们可以使用类型守卫将联合类型缩小到明确的子类型，具体示例如下：
+
+```js
+{
+  let func = (anything: string | number) => {
+    if (typeof anything === 'string') {
+      return anything; // 类型是 string 
+    } else {
+      return anything; // 类型是 number
+    }
+  };
+}
+```
+
+当然，我们也可以通过字面量类型等值判断（===）或其他控制流语句（包括但不限于 if、三目运算符、switch 分支）将联合类型收敛为更具体的类型，如下代码所示：
+
+```js
+{
+  type Goods = 'pen' | 'pencil' |'ruler';
+  const getPenCost = (item: 'pen') => 2;
+  const getPencilCost = (item: 'pencil') => 4;
+  const getRulerCost = (item: 'ruler') => 6;
+  const getCost = (item: Goods) =>  {
+    if (item === 'pen') {
+      return getPenCost(item); // item => 'pen'
+    } else if (item === 'pencil') {
+      return getPencilCost(item); // item => 'pencil'
+    } else {
+      return getRulerCost(item); // item => 'ruler'
+    }
+  }
+}
+```
+
