@@ -1607,13 +1607,1304 @@ sum(1, 2);    // 3
 
 
 
+### 扁平化的方式
+
+#### 方法一：普通的递归实
+普通的递归思路很容易理解，就是通过循环递归的方式，一项一项地去遍历，如果每一项还是一个数组，那么就继续往下遍历，利用递归程序的方法，来实现数组的每一项的连接。我们来看下这个方法是如何实现的，如下所示。
+
+```js
+// 方法1
+var a = [1, [2, [3, 4, 5]]];
+function flatten(arr) {
+  let result = [];
+
+  for(let i = 0; i < arr.length; i++) {
+    if(Array.isArray(arr[i])) {
+      result = result.concat(flatten(arr[i]));
+    } else {
+      result.push(arr[i]);
+    }
+  }
+  return result;
+}
+flatten(a);  //  [1, 2, 3, 4，5]
+```
+
+#### 方法二：利用 reduce 函数迭代
+从上面普通的递归函数中可以看出，其实就是对数组的每一项进行处理，那么我们其实也可以用第 7 讲中说的 reduce 来实现数组的拼接，从而简化第一种方法的代码，改造后的代码如下所示。
+
+```js
+// 方法2
+var arr = [1, [2, [3, 4]]];
+function flatten(arr) {
+    return arr.reduce(function(prev, next){
+        return prev.concat(Array.isArray(next) ? flatten(next) : next)
+    }, [])
+}
+console.log(flatten(arr));//  [1, 2, 3, 4，5]
+```
+
+#### 方法三：扩展运算符实现
+这个方法的实现，采用了扩展运算符和 some 的方法，两者共同使用，达到数组扁平化的目的，还是来看一下代码。
+
+```js
+// 方法3
+var arr = [1, [2, [3, 4]]];
+function flatten(arr) {
+    while (arr.some(item => Array.isArray(item))) {
+        arr = [].concat(...arr);
+    }
+    return arr;
+}
+console.log(flatten(arr)); //  [1, 2, 3, 4，5]
+```
+
+#### 方法四：split 和 toString 共同处理
+我们也可以通过 split 和 toString 两个方法，来共同实现数组扁平化，由于数组会默认带一个 toString 的方法，所以可以把数组直接转换成逗号分隔的字符串，然后再用 split 方法把字符串重新转换为数组，如下面的代码所示。
+
+```js
+// 方法4
+var arr = [1, [2, [3, 4]]];
+function flatten(arr) {
+    return arr.toString().split(',');
+}
+console.log(flatten(arr)); //  [1, 2, 3, 4]
+```
+
+#### 方法五：调用 ES6 中的 flat
+我们还可以直接调用 ES6 中的 flat 方法，可以直接实现数组扁平化。先来看下 flat 方法的语法：
+
+> arr.flat([depth])
+
+其中 depth 是 flat 的参数，depth 是可以传递数组的展开深度（默认不填、数值是 1），即展开一层数组。那么如果多层的该怎么处理呢？参数也可以传进 Infinity，代表不论多少层都要展开。那么我们来看下，用 flat 方法怎么实现，请看下面的代码。
+
+```js
+// 方法5
+var arr = [1, [2, [3, 4]]];
+function flatten(arr) {
+  return arr.flat(Infinity);
+}
+console.log(flatten(arr)); //  [1, 2, 3, 4，5]
+```
+
+#### 方法六：正则和 JSON 方法共同处理
+我们在第四种方法中已经尝试了用 toString 方法，其中仍然采用了将 JSON.stringify 的方法先转换为字符串，然后通过正则表达式过滤掉字符串中的数组的方括号，最后再利用 JSON.parse 把它转换成数组。请看下面的代码。
+
+```js
+// 方法 6
+let arr = [1, [2, [3, [4, 5]]], 6];
+function flatten(arr) {
+  let str = JSON.stringify(arr);
+  str = str.replace(/(\[|\])/g, '');
+  str = '[' + str + ']';
+  return JSON.parse(str); 
+}
+console.log(flatten(arr)); //  [1, 2, 3, 4，5]
+```
 
 
 
+### sort 方法实现原理
+
+#### 结论：
+
++ 当 n<=10 时，采用插入排序；
+
++ 当 n>10 时，采用三路快速排序；
+
++ 10<n <=1000，采用中位数作为哨兵元素；
+
++ n>1000，每隔 200~215 个元素挑出一个元素，放到一个新数组中，然后对它排序，找到中间位置的数，以此作为中位数。
+
+1. 为什么元素个数少的时候要采用插入排序？
+
+虽然插入排序理论上是平均时间复杂度为 O(n^2) 的算法，快速排序是一个平均 O(nlogn) 级别的算法。但是别忘了，这只是理论上平均的时间复杂度估算，但是它们也有最好的时间复杂度情况，而插入排序在最好的情况下时间复杂度是 O(n)。
+
+在实际情况中两者的算法复杂度前面都会有一个系数，当 n 足够小的时候，快速排序 nlogn 的优势会越来越小。倘若插入排序的 n 足够小，那么就会超过快排。而事实上正是如此，插入排序经过优化以后，对于小数据集的排序会有非常优越的性能，很多时候甚至会超过快排。因此，对于很小的数据量，应用插入排序是一个非常不错的选择。
+
+2. 为什么要花这么大的力气选择哨兵元素？
+
+因为快速排序的性能瓶颈在于递归的深度，最坏的情况是每次的哨兵都是最小元素或者最大元素，那么进行 partition（一边是小于哨兵的元素，另一边是大于哨兵的元素）时，就会有一边是空的。如果这么排下去，递归的层数就达到了 n , 而每一层的复杂度是 O(n)，因此快排这时候会退化成 O(n^2) 级别。
+
+这种情况是要尽力避免的，那么如何来避免？就是让哨兵元素尽可能地处于数组的中间位置，让最大或者最小的情况尽可能少。这时候，你就能理解 V8 里面所做的各种优化了。
+
+接下来，我们看一下官方实现的 sort 排序算法的代码基本结构。
+
+```js
+function ArraySort(comparefn) {
+	  CHECK_OBJECT_COERCIBLE(this,"Array.prototype.sort");
+	  var array = TO_OBJECT(this);
+	  var length = TO_LENGTH(array.length);
+	  return InnerArraySort(array, length, comparefn);
+}
+function InnerArraySort(array, length, comparefn) {
+  // 比较函数未传入
+  if (!IS_CALLABLE(comparefn)) {
+	    comparefn = function (x, y) {
+	      if (x === y) return 0;
+	      if (%_IsSmi(x) && %_IsSmi(y)) {
+	        return %SmiLexicographicCompare(x, y);
+	      }
+	      x = TO_STRING(x);
+	      y = TO_STRING(y);
+	      if (x == y) return 0;
+	      else return x < y ? -1 : 1;
+	 };
+  }
+  function InsertionSort(a, from, to) {
+    // 插入排序
+    for (var i = from + 1; i < to; i++) {
+	      var element = a[i];
+	      for (var j = i - 1; j >= from; j--) {
+	        var tmp = a[j];
+	        var order = comparefn(tmp, element);
+	        if (order > 0) {
+	          a[j + 1] = tmp;
+	        } else {
+	          break;
+	        }
+	      }
+	    a[j + 1] = element;
+	 }
+  }
+  function GetThirdIndex(a, from, to) {   // 元素个数大于1000时寻找哨兵元素
+    var t_array = new InternalArray();
+	var increment = 200 + ((to - from) & 15);
+	var j = 0;
+	from += 1;
+	to -= 1;
+	for (var i = from; i < to; i += increment) {
+	   t_array[j] = [i, a[i]];
+	   j++;
+	}
+	t_array.sort(function(a, b) {
+	   return comparefn(a[1], b[1]);
+	});
+	var third_index = t_array[t_array.length >> 1][0];
+	return third_index;
+  }
+  function QuickSort(a, from, to) {  // 快速排序实现
+        //哨兵位置
+	    var third_index = 0;
+	    while (true) {
+	      if (to - from <= 10) {
+	        InsertionSort(a, from, to); // 数据量小，使用插入排序，速度较快
+	        return;
+	      }
+	      if (to - from > 1000) {
+	        third_index = GetThirdIndex(a, from, to);
+	      } else {
+            // 小于1000 直接取中点
+	        third_index = from + ((to - from) >> 1);
+	      }
+          // 下面开始快排
+	      var v0 = a[from];
+	      var v1 = a[to - 1];
+	      var v2 = a[third_index];
+	      var c01 = comparefn(v0, v1);
+	      if (c01 > 0) {
+	        var tmp = v0;
+	        v0 = v1;
+	        v1 = tmp;
+	      }
+	      var c02 = comparefn(v0, v2);
+	      if (c02 >= 0) {
+	        var tmp = v0;
+	        v0 = v2;
+	        v2 = v1;
+	        v1 = tmp;
+	      } else {
+	        var c12 = comparefn(v1, v2);
+	        if (c12 > 0) {
+	          var tmp = v1;
+	          v1 = v2;
+	          v2 = tmp;
+	        }
+	      }
+	      a[from] = v0;
+	      a[to - 1] = v2;
+	      var pivot = v1;
+	      var low_end = from + 1; 
+	      var high_start = to - 1;
+	      a[third_index] = a[low_end];
+	      a[low_end] = pivot;
+	      partition: for (var i = low_end + 1; i < high_start; i++) {
+	        var element = a[i];
+	        var order = comparefn(element, pivot);
+	        if (order < 0) {
+	          a[i] = a[low_end];
+	          a[low_end] = element;
+	          low_end++;
+	        } else if (order > 0) {
+	          do {
+	            high_start--;
+	            if (high_start == i) break partition;
+	            var top_elem = a[high_start];
+	            order = comparefn(top_elem, pivot);
+	          } while (order > 0);
+	          a[i] = a[high_start];
+	          a[high_start] = element;
+	          if (order < 0) {
+	            element = a[i];
+	            a[i] = a[low_end];
+	            a[low_end] = element;
+	            low_end++;
+	          }
+	        }
+	      }
+          // 快排的核心思路，递归调用快速排序方法
+	      if (to - high_start < low_end - from) {
+	        QuickSort(a, high_start, to);
+	        to = low_end;
+	      } else {
+	        QuickSort(a, from, low_end);
+	        from = high_start;
+	      }
+	  }
+  }
+```
+
+从上面的源码分析来看，当数据量小于 10 的时候用插入排序；当数据量大于 10 之后采用三路快排；当数据量为 10~1000 时候直接采用中位数为哨兵元素；当数据量大于 1000 的时候就开始寻找哨兵元素。
+
+我们直接从上面的源码中就可以看到整个 sort 源码的编写逻辑，也就是上面总结分析的逻辑对应实现。如果你还是没有理解得很好，我建议你再重新看一下插入排序和快速排序的核心逻辑。其实关键点在于根据数据量的大小，从而确定用什么排序来解决；时间复杂度是根据数据量的大小，从而进行变化的，这一点需要深入理解。
+
+### 异步编程
+
+我们在日常开发中都用过哪些 JS 异步编程的方式？总结起来无外乎有这几种：回调函数、事件监听、Promise、Generator、async/await，这几种 JS 的编程方式都是异步编程。回调函数方式是最早的 JS 异步编程的方式，后随着 ES 标准的发展，Promise、Generator 和 async/await 接连出现。
+
+#### 什么是同步？
+所谓的同步就是在执行某段代码时，在该代码没有得到返回结果之前，其他代码暂时是无法执行的，但是一旦执行完成拿到返回值之后，就可以执行其他代码了。换句话说，在此段代码执行完未返回结果之前，会阻塞之后的代码执行，这样的情况称为同步。
+
+#### 什么是异步？
+所谓异步就是当某一代码执行异步过程调用发出后，这段代码不会立刻得到返回结果。而是在异步调用发出之后，一般通过回调函数处理这个调用之后拿到结果。异步调用发出后，不会影响阻塞后面的代码执行，这样的情形称为异步。
+
+#### JS 编程中为什么需要异步？
+我们都知道 JavaScript 是单线程的，如果 JS 都是同步代码执行意味着什么呢？这样可能会造成阻塞，如果当前我们有一段代码需要执行时，如果使用同步的方式，那么就会阻塞后面的代码执行；而如果使用异步则不会阻塞，我们不需要等待异步代码执行的返回结果，可以继续执行该异步任务之后的代码逻辑。因此在 JS 编程中，会大量使用异步来进行编程，这也是我要专门讲解这部分的原因。
+
+#### JS 异步编程方式发展历程
+说完了异步编程的基本概念，下面我们按照时间顺序来看一下 JS 异步编程的实现方式。
+
+##### 回调函数
+从历史发展的脉络来看，早些年为了实现 JS 的异步编程，一般都采用回调函数的方式，比如比较典型的事件的回调，或者用 setTimeout/ setInterval 来实现一些异步编程的操作，但是使用回调函数来实现存在一个很常见的问题，那就是回调地狱。
+
+这里我列举了一种现实开发中会遇到的场景，我们来看一下代码。
+
+```js
+fs.readFile(A, 'utf-8', function(err, data) {
+    fs.readFile(B, 'utf-8', function(err, data) {
+        fs.readFile(C, 'utf-8', function(err, data) {
+            fs.readFile(D, 'utf-8', function(err, data) {
+                //....
+            });
+        });
+    });
+});
+```
+
+从上面的代码可以看出，其逻辑为先读取 A 文本内容，再根据 A 文本内容读取 B，然后再根据 B 的内容读取 C。为了实现这个业务逻辑，上面实现的代码就很容易形成回调地狱。回调实现异步编程的场景也有很多，比如：
+
+1. ajax 请求的回调；
+
+2. 定时器中的回调；
+
+3. 事件回调；
+
+4. Nodejs 中的一些方法回调。
+
+异步回调如果层级很少，可读性和代码的维护性暂时还是可以接受，一旦层级变多就会陷入回调地狱，上面这些异步编程的场景都会涉及回调地狱的问题。下面我们来看一下针对上面这个业务场景，改成 Promise 来实现异步编程，会是什么样子的呢？
+
+##### Promise
+为了解决回调地狱的问题，之后社区提出了 Promise 的解决方案，ES6 又将其写进了语言标准，采用 Promise 的实现方式在一定程度上解决了回调地狱的问题。
+
+我们还是针对上面的这个场景来看下先读取 A 文本内容，再根据 A 文本内容读取 B 文件，接着再根据 B 文件的内容读取 C 文件。我们看这样的实现通过 Promise 改造之后是什么样的，请看代码。
+
+```js
+function read(url) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(url, 'utf8', (err, data) => {
+            if(err) reject(err);
+            resolve(data);
+        });
+    });
+}
+read(A).then(data => {
+    return read(B);
+}).then(data => {
+    return read(C);
+}).then(data => {
+    return read(D);
+}).catch(reason => {
+    console.log(reason);
+});
+```
+
+##### Generator
+Generator 也是一种异步编程解决方案，它最大的特点就是可以交出函数的执行权，Generator 函数可以看出是异步任务的容器，需要暂停的地方，都用 yield 语法来标注。Generator 函数一般配合 yield 使用，Generator 函数最后返回的是迭代器。如果你对迭代器不太了解，可以自行补习一下这部分内容。
+
+```js
+function* gen() {
+    let a = yield 111;
+    console.log(a);
+    let b = yield 222;
+    console.log(b);
+    let c = yield 333;
+    console.log(c);
+    let d = yield 444;
+    console.log(d);
+}
+let t = gen();
+t.next(1); //第一次调用next函数时，传递的参数无效，故无打印结果
+t.next(2); // a输出2;
+t.next(3); // b输出3; 
+t.next(4); // c输出4;
+t.next(5); // d输出5;
+```
+
+##### async/await
+ES6 之后 ES7 中又提出了新的异步解决方案：async/await，async 是 Generator 函数的语法糖，async/await 的优点是代码清晰（不像使用 Promise 的时候需要写很多 then 的方法链），可以处理回调地狱的问题。async/await 写起来使得 JS 的异步代码看起来像同步代码，其实异步编程发展的目标就是让异步逻辑的代码看起来像同步一样容易理解。
+
+`````js
+function testWait() {
+    return new Promise((resolve,reject)=>{
+        setTimeout(function(){
+            console.log("testWait");
+            resolve();
+        }, 1000);
+    })
+}
+async function testAwaitUse(){
+    await testWait()
+    console.log("hello");
+    return 123;
+    // 输出顺序：testWait，hello
+    // 第十行如果不使用await输出顺序：hello , testWait
+}
+console.log(testAwaitUse());
+`````
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220425172226.png)
+
+### 深入理解 Promise
+
+#### Promise 的基本情况
+
+如果一定要解释 Promise 到底是什么，简单来说它就是一个容器，里面保存着某个未来才会结束的事件（通常是异步操作）的结果。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。
+
+Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理。我们来简单看一下 Promise 实现的链式调用代码，如下所示。
+
+```js
+function read(url) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(url, 'utf8', (err, data) => {
+            if(err) reject(err);
+            resolve(data);
+        });
+    });
+}
+read(A).then(data => {
+    return read(B);
+}).then(data => {
+    return read(C);
+}).then(data => {
+    return read(D);
+}).catch(reason => {
+    console.log(reason);
+});
+```
+
+结合上面的代码，我们一起来分析一下 Promise 内部的状态流转情况，Promise 对象在被创建出来时是待定的状态，它让你能够把异步操作返回最终的成功值或者失败原因，和相应的处理程序关联起来。
+
+一般 Promise 在执行过程中，必然会处于以下几种状态之一。
+
+1. 待定（pending）：初始状态，既没有被完成，也没有被拒绝。
+
+2. 已完成（fulfilled）：操作成功完成。
+
+3. 已拒绝（rejected）：操作失败。
+
+待定状态的 Promise 对象执行的话，最后要么会通过一个值完成，要么会通过一个原因被拒绝。当其中一种情况发生时，我们用 Promise 的 then 方法排列起来的相关处理程序就会被调用。因为最后 Promise.prototype.then 和 Promise.prototype.catch 方法返回的是一个 Promise， 所以它们可以继续被链式调用。
+
+关于 Promise 的状态流转情况，有一点值得注意的是，内部状态改变之后不可逆，你需要在编程过程中加以注意。文字描述比较晦涩，我们直接通过一张图就能很清晰地看出 Promise 内部状态流转的情况，如下所示（图片来源于网络）。
+
+![img](https://s0.lgstatic.com/i/image6/M01/05/09/Cgp9HWAvhIyAH1WgAAES_06spV4639.png)
+
+从上图可以看出，我们最开始创建一个新的 Promise 返回给 p1 ，然后开始执行，状态是 pending，当执行 resolve 之后状态就切换为 fulfilled，执行 reject 之后就变为 rejected 的状态。
+
+关于 Promise 的状态切换如果你想深入研究，可以学习一下“有限状态机”这个知识点。日常中比较常见的状态机有很多，比如马路上的红绿灯。
+
+那么，Promise 的基本情况先介绍到这里，我们再一起来分析下，Promise 如何解决回调地狱的问题。
+
+#### Promise 如何解决回调地狱
+
+首先，请你再回想一下什么是回调地狱，回调地狱有两个主要的问题：
+
+1. 多层嵌套的问题；
+
+3. 每种任务的处理结果存在两种可能性（成功或失败），那么需要在每种任务执行结束后分别处理这两种可能性。
+
+这两种问题在“回调函数时代”尤为突出，Promise 的诞生就是为了解决这两个问题。Promise 利用了三大技术手段来解决回调地狱：**回调函数延迟绑定、返回值穿透、错误冒泡**。
+
+下面我们通过一段代码来说明，如下所示。
+
+```js
+let readFilePromise = filename => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filename, (err, data) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(data)
+      }
+    })
+  })
+}
+readFilePromise('1.json').then(data => {
+  return readFilePromise('2.json')
+});
+```
+
+从上面的代码中可以看到，回调函数不是直接声明的，而是通过后面的 then 方法传入的，即延迟传入，这就是回调函数延迟绑定。接下来我们针对上面的代码做一下微调，如下所示。
+
+```js
+let x = readFilePromise('1.json').then(data => {
+  return readFilePromise('2.json')  //这是返回的Promise
+});
+x.then(/* 内部逻辑省略 */)
+```
+
+我们根据 then 中回调函数的传入值创建不同类型的 Promise，然后把返回的 Promise 穿透到外层，以供后续的调用。这里的 x 指的就是内部返回的 Promise，然后在 x 后面可以依次完成链式调用。这便是返回值穿透的效果，这两种技术一起作用便可以将深层的嵌套回调写成下面的形式。
+
+```js
+readFilePromise('1.json').then(data => {
+    return readFilePromise('2.json');
+}).then(data => {
+    return readFilePromise('3.json');
+}).then(data => {
+    return readFilePromise('4.json');
+});
+```
+
+这样就显得清爽了许多，更重要的是，它更符合人的线性思维模式，开发体验也更好，两种技术结合产生了链式调用的效果。
+
+这样解决了多层嵌套的问题，那另外一个问题，即每次任务执行结束后分别处理成功和失败的情况怎么解决的呢？Promise 采用了错误冒泡的方式。其实很容易理解，我们来看看效果。
+
+```js
+readFilePromise('1.json').then(data => {
+    return readFilePromise('2.json');
+}).then(data => {
+    return readFilePromise('3.json');
+}).then(data => {
+    return readFilePromise('4.json');
+}).catch(err => {
+  // xxx
+})
+```
+
+这样前面产生的错误会一直向后传递，被 catch 接收到，就不用频繁地检查错误了。从上面的这些代码中可以看到，Promise 解决效果也比较明显：实现链式调用，解决多层嵌套问题；实现错误冒泡后一站式处理，解决每次任务中判断错误、增加代码混乱度的问题。
+
+接下来我们再看看 Promise 提供了哪些静态的方法。
+
+#### Promise 的静态方法
+
+##### all 方法
+语法： Promise.all（iterable）
+
+参数： 一个可迭代对象，如 Array。
+
+描述： 此方法对于汇总多个 promise 的结果很有用，在 ES6 中可以将多个 Promise.all 异步请求并行操作，返回结果一般有下面两种情况。
+
+1. 当所有结果成功返回时按照请求顺序返回成功。
+
+2. 当其中有一个失败方法时，则进入失败方法。
+
+##### allSettled 方法
+Promise.allSettled 的语法及参数跟 Promise.all 类似，其参数接受一个 Promise 的数组，返回一个新的 Promise。唯一的不同在于，执行完之后不会失败，也就是说当 Promise.allSettled 全部处理完成后，我们可以拿到每个 Promise 的状态，而不管其是否处理成功。
+
+##### any 方法
+语法： Promise.any（iterable）
+
+参数： iterable 可迭代的对象，例如 Array。
+
+描述： any 方法返回一个 Promise，只要参数 Promise 实例有一个变成 fulfilled 状态，最后 any 返回的实例就会变成 fulfilled 状态；如果所有参数 Promise 实例都变成 rejected 状态，包装实例就会变成 rejected 状态。
+
+##### race 方法
+语法： Promise.race（iterable）
+
+参数： iterable 可迭代的对象，例如 Array。
+
+描述： race 方法返回一个 Promise，只要参数的 Promise 之中有一个实例率先改变状态，则 race 方法的返回状态就跟着改变。那个率先改变的 Promise 实例的返回值，就传递给 race 方法的回调函数。
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220425182928.png)
+
+### 实现符合 Promise/A+ 规范的 Promise
+
+#### Promise/A+ 规范
+
+只有对规范进行解读并且形成明确的认知，才能更好地实现 Promise。官方的地址为：https://promisesaplus.com/，这是一个英文的版本，我把其中比较关键的部分挑了出来。
+
+##### 术语
+
+先来看看 Promise/A+ 规范的基本术语，如下所示。
+
+> “promise” is an object or function with a then method whose behavior conforms to this specification.
+> “thenable” is an object or function that defines a then method.
+> “value” is any legal JavaScript value (including undefined, a thenable, or a promise).
+> “exception” is a value that is thrown using the throw statement.
+> “reason” is a value that indicates why a promise was rejected.
+
+翻译过来，它所描述的就是以下五点。
+
+> “promise”：是一个具有 then 方法的对象或者函数，它的行为符合该规范。
+>
+> “thenable”：是一个定义了 then 方法的对象或者函数。
+>
+> “value”：可以是任何一个合法的 JavaScript 的值（包括 undefined、thenable 或 promise）。
+>
+> “exception”：是一个异常，是在 Promise 里面可以用 throw 语句抛出来的值。
+>
+> “reason”：是一个 Promise 里 reject 之后返回的拒绝原因。
+
+##### 状态描述
+看完了术语部分，我们再看下Promise/A+ 规范中，对 Promise 的内部状态的描述，如下所示。
+
+> A promise must be in one of three states: pending, fulfilled, or rejected.
+> When pending, a promise:
+> may transition to either the fulfilled or rejected state.
+> When fulfilled, a promise:
+> must not transition to any other state.
+> must have a value, which must not change.
+> When rejected, a promise:
+> must not transition to any other state.
+> must have a reason, which must not change.
+> Here, “must not change” means immutable identity (i.e. ===), but does not imply deep immutability.
+
+将上述描述总结起来，大致有以下几点。
+
+> 一个 Promise 有三种状态：pending、fulfilled 和 rejected。
+>
+> 当状态为 pending 状态时，即可以转换为 fulfilled 或者 rejected 其中之一。
+>
+> 当状态为 fulfilled 状态时，就不能转换为其他状态了，必须返回一个不能再改变的值。
+>
+> 当状态为 rejected 状态时，同样也不能转换为其他状态，必须有一个原因的值也不能改变。
+
+##### then 方法
+关于 then 方法的英文解读和翻译，我直接总结了出来：一个 Promise 必须拥有一个 then 方法来访问它的值或者拒绝原因。
+
+then 方法有两个参数：
+
+>  promise.then(onFulfilled, onRejected)
+
+onFulfilled 和 onRejected 都是可选参数。
+
+##### onFulfilled 和 onRejected 特性
+
+如果 onFulfilled 是函数，则当 Promise 执行结束之后必须被调用(?还不理解)，最终返回值为 value，其调用次数不可超过一次。而 onRejected 除了最后返回的是 reason 外，其他方面和 onFulfilled 在规范上的表述基本一样。
+
+##### 多次调用
+
+then 方法其实可以被一个 Promise 调用多次，且必须返回一个 Promise 对象。then 的写法如下所示，其中 Promise1 执行了 then 的方法之后，返回的依旧是个 Promise2，然后我们拿着 Promise2 又可以执行 then 方法，而 Promise2 是一个新的 Promise 对象，又可以继续进行 then 方法调用。
+
+```js
+promise2 = promise1.then(onFulfilled, onRejected);
+```
+
+#### 一步步实现 Promise
+按照 Promise/A+ 的规范，第一步就是构造函数。
+
+##### 构造函数
+这一步的思路是：Promise 构造函数接受一个 executor 函数，executor 函数执行完同步或者异步操作后，调用它的两个参数 resolve 和 reject。请看下面的代码，大致的构造函数框架就是这样的。
+
+```js
+function Promise(executor) {
+  var self = this
+  self.status = 'pending'   // Promise当前的状态
+  self.data = undefined     // Promise的值
+  self.onResolvedCallback = [] // Promise resolve时的回调函数集
+  self.onRejectedCallback = [] // Promise reject时的回调函数集
+  executor(resolve, reject) // 执行executor并传入相应的参数
+}
+```
+
+从上面的代码中可以看出，我们先定义了一个 Promise 的初始状态 pending，以及参数执行函数 executor，并且按照规范设计了一个 resolve 回调函数集合数组 onResolvedCallback 以及 一个 reject 回调函数集合数组，那么构造函数的初始化就基本完成了。
+
+接下来我们看看还需要添加什么东西呢？那就是需要在构造函数中完善 resolve 和 reject 两个函数，完善之后的代码如下。
+
+```js
+function Promise(executor) {
+  var self = this
+  self.status = 'pending'   // Promise当前的状态
+  self.data = undefined    // Promise的值
+  self.onResolvedCallback = [] // Promise resolve时的回调函数集
+  self.onRejectedCallback = [] // Promise reject时的回调函数集
+  function resolve(value) {
+    // TODO
+  }
+  function reject(reason) {
+    // TODO
+  }
+  try { // 考虑到执行过程中有可能出错，所以我们用try/catch块给包起
+    executor(resolve, reject) // 执行executor
+  } catch(e) {
+    reject(e)
+  }
+}
+```
+
+resolve 和 reject 内部应该怎么实现呢？我们根据规范知道这两个方法主要做的事情就是返回对应状态的值 value 或者 reason，并把 Promise 内部的 status 从 pending 变成对应的状态，并且这个状态在改变了之后是不可以逆转的。
+
+那么这两个函数应该怎么写呢？可以看下面的这段代码。
+
+```js
+function Promise(executor) {
+  // ...上面的省略
+  function resolve(value) {
+    if (self.status === 'pending') {
+      self.status = 'resolved'
+      self.data = value
+      for(var i = 0; i < self.onResolvedCallback.length; i++) {
+        self.onResolvedCallback[i](value)
+      }
+    }
+  }
+  
+  function reject(reason) {
+    if (self.status === 'pending') {
+      self.status = 'rejected'
+      self.data = reason
+      for(var i = 0; i < self.onRejectedCallback.length; i++) {
+        self.onRejectedCallback[i](reason)
+      }
+    }
+  }
+  // 下面的省略
+}
+```
+
+上述代码所展示的，基本就是在判断状态为 pending 之后，把状态改为相应的值，并把对应的 value 和 reason 存在内部的 data 属性上面，之后执行相应的回调函数。逻辑比较简单，无非是由于 onResolveCallback 和 onRejectedCallback 这两个是数组，需要通过循环来执行
+
+##### 实现 then 方法
+根据标准，我们要考虑几个问题。
+
+then 方法是 Promise 执行完之后可以拿到 value 或者 reason 的方法，并且还要保持 then 执行之后，返回的依旧是一个 Promise 方法，还要支持多次调用（上面标准中提到过）。
+
+因此 then 方法实现的思路也有了，请看下面的一段代码。
+
+```js
+// then方法接收两个参数onResolved和onRejected，分别为Promise成功或失败后的回调
+Promise.prototype.then = function(onResolved, onRejected) {
+  var self = this
+  var promise2
+  // 根据标准，如果then的参数不是function，则需要忽略它
+  onResolved = typeof onResolved === 'function' ? onResolved : function(v) {}
+  onRejected = typeof onRejected === 'function' ? onRejected : function(r) {}
+  if (self.status === 'resolved') {
+    return promise2 = new Promise(function(resolve, reject) {
+    })
+  }
+  if (self.status === 'rejected') {
+    return promise2 = new Promise(function(resolve, reject) {
+    })
+  }
+  if (self.status === 'pending') {
+    return promise2 = new Promise(function(resolve, reject) {
+    })
+  }
+}
+```
+
+从上面的代码中可以看到，我们在 then 方法内部先初始化了 Promise2 的对象，用来存放执行之后返回的 Promise，并且还需要判断 then 方法传参进来的两个参数必须为函数，这样才可以继续执行。
+
+上面我只是搭建了 then 方法框架的整体思路，但是不同状态的返回细节处理也需要完善，通过仔细阅读标准，完善之后的 then 的代码如下。
+
+```js
+Promise.prototype.then = function(onResolved, onRejected) {
+  var self = this
+  var promise2
+  // 根据标准，如果then的参数不是function，则需要忽略它
+  onResolved = typeof onResolved === 'function' ? onResolved : function(value) {}
+  onRejected = typeof onRejected === 'function' ? onRejected : function(reason) {}
+  if (self.status === 'resolved') {
+    // 如果promise1的状态已经确定并且是resolved，我们调用onResolved，考虑到有可能throw，所以还需要将其包在try/catch块里
+    return promise2 = new Promise(function(resolve, reject) {
+      try {
+        var x = onResolved(self.data)
+        if (x instanceof Promise) {
+// 如果onResolved的返回值是一个Promise对象，直接取它的结果作为promise2的结果
+          x.then(resolve, reject)
+        }
+        resolve(x) // 否则，以它的返回值作为promise2的结果
+      } catch (e) {
+        reject(e) // 如果出错，以捕获到的错误作为promise2的结果
+      }
+    })
+  }
+  // 此处与前一个if块的逻辑几乎相同，区别在于所调用的是onRejected函数
+  if (self.status === 'rejected') {
+    return promise2 = new Promise(function(resolve, reject) {
+      try {
+        var x = onRejected(self.data)
+        if (x instanceof Promise) {
+          x.then(resolve, reject)
+        }
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+  if (self.status === 'pending') {
+  // 如果当前的Promise还处于pending状态，我们并不能确定调用onResolved还是onRejected，只能等到Promise的状态确定后，才能确定如何处理
+    return promise2 = new Promise(function(resolve, reject) {
+      self.onResolvedCallback.push(function(value) {
+        try {
+          var x = onResolved(self.data)
+          if (x instanceof Promise) {
+            x.then(resolve, reject)
+          }
+        } catch (e) {
+          reject(e)
+        }
+      })
+      self.onRejectedCallback.push(function(reason) {
+        try {
+          var x = onRejected(self.data)
+          if (x instanceof Promise) {
+            x.then(resolve, reject)
+          }
+        } catch (e) {
+          reject(e)
+        }
+      })
+    })
+  }
+}
+```
+
+根据上面的代码可以看出，我们基本实现了一个符合标准的 then 方法。但是标准里提到了，还要支持不同的 Promise 进行交互，关于不同的 Promise 交互其实Promise 标准说明中有提到。其中详细指定了如何通过 then 的实参返回的值来决定 Promise2 的状态。
+
+关于为何需要不同的 Promise 实现交互，原因应该是 Promise 并不是 JS 一开始存在的标准，如果你使用的某一个库中封装了一个 Promise 的实现，想象一下如果它不能跟你自己使用的 Promise 实现交互的情况，其实还是会有问题的，因此我们还需要调整一下 then 方法中执行 Promise 的方法。
+
+另外还有一个需要注意的是，在 Promise/A+ 规范中，onResolved 和 onRejected 这两项函数需要异步调用，关于这一点，标准里面是这么说的：
+
+> In practice, this requirement ensures that onFulfilled and onRejected execute asynchronously, after the event loop turn in which then is called, and with a fresh stack.
+
+所以我们需要对代码做一点变动，即在处理 Promise 进行 resolve 或者 reject 的时候，加上 setTimeout(fn, 0)。
+
+下面就结合上面两点调整，给出完整版的代码
+
+```js
+try {
+  module.exports = Promise
+} catch (e) {}
+function Promise(executor) {
+  var self = this
+  self.status = 'pending'
+  self.onResolvedCallback = []
+  self.onRejectedCallback = []
+  function resolve(value) {
+    if (value instanceof Promise) {
+      return value.then(resolve, reject)
+    }
+    setTimeout(function() { // 异步执行所有的回调函数
+      if (self.status === 'pending') {
+        self.status = 'resolved'
+        self.data = value
+        for (var i = 0; i < self.onResolvedCallback.length; i++) {
+          self.onResolvedCallback[i](value)
+        }
+      }
+    })
+  }
+  function reject(reason) {
+    setTimeout(function() { // 异步执行所有的回调函数
+      if (self.status === 'pending') {
+        self.status = 'rejected'
+        self.data = reason
+        for (var i = 0; i < self.onRejectedCallback.length; i++) {
+          self.onRejectedCallback[i](reason)
+        }
+      }
+    })
+  }
+  try {
+    executor(resolve, reject)
+  } catch (reason) {
+    reject(reason)
+  }
+}
+function resolvePromise(promise2, x, resolve, reject) {
+  var then
+  var thenCalledOrThrow = false
+  if (promise2 === x) {
+    return reject(new TypeError('Chaining cycle detected for promise!'))
+  }
+  if (x instanceof Promise) {
+    if (x.status === 'pending') { 
+      x.then(function(v) {
+        resolvePromise(promise2, v, resolve, reject)
+      }, reject)
+    } else {
+      x.then(resolve, reject)
+    }
+    return
+  }
+  if ((x !== null) && ((typeof x === 'object') || (typeof x === 'function'))) {
+    try {
+      then = x.then
+      if (typeof then === 'function') {
+        then.call(x, function rs(y) {
+          if (thenCalledOrThrow) return
+          thenCalledOrThrow = true
+          return resolvePromise(promise2, y, resolve, reject)
+        }, function rj(r) {
+          if (thenCalledOrThrow) return
+          thenCalledOrThrow = true
+          return reject(r)
+        })
+      } else {
+        resolve(x)
+      }
+    } catch (e) {
+      if (thenCalledOrThrow) return
+      thenCalledOrThrow = true
+      return reject(e)
+    }
+  } else {
+    resolve(x)
+  }
+}
+Promise.prototype.then = function(onResolved, onRejected) {
+  var self = this
+  var promise2
+  onResolved = typeof onResolved === 'function' ? onResolved : function(v) {
+    return v
+  }
+  onRejected = typeof onRejected === 'function' ? onRejected : function(r) {
+    throw r
+  }
+  if (self.status === 'resolved') {
+    return promise2 = new Promise(function(resolve, reject) {
+      setTimeout(function() { // 异步执行onResolved
+        try {
+          var x = onResolved(self.data)
+          resolvePromise(promise2, x, resolve, reject)
+        } catch (reason) {
+          reject(reason)
+        }
+      })
+    })
+  }
+  if (self.status === 'rejected') {
+    return promise2 = new Promise(function(resolve, reject) {
+      setTimeout(function() { // 异步执行onRejected
+        try {
+          var x = onRejected(self.data)
+          resolvePromise(promise2, x, resolve, reject)
+        } catch (reason) {
+          reject(reason)
+        }
+      })
+    })
+  }
+  if (self.status === 'pending') {
+    // 这里之所以没有异步执行，是因为这些函数必然会被resolve或reject调用，而resolve或reject函数里的内容已是异步执行，构造函数里的定义
+    return promise2 = new Promise(function(resolve, reject) {
+      self.onResolvedCallback.push(function(value) {
+        try {
+          var x = onResolved(value)
+          resolvePromise(promise2, x, resolve, reject)
+        } catch (r) {
+          reject(r)
+        }
+      })
+      self.onRejectedCallback.push(function(reason) {
+          try {
+            var x = onRejected(reason)
+            resolvePromise(promise2, x, resolve, reject)
+          } catch (r) {
+            reject(r)
+          }
+        })
+    })
+  }
+}
+Promise.prototype.catch = function(onRejected) {
+  return this.then(null, onRejected)
+}
+// 最后这个是测试用的，后面会说
+Promise.deferred = Promise.defer = function() {
+  var dfd = {}
+  dfd.promise = new Promise(function(resolve, reject) {
+    dfd.resolve = resolve
+    dfd.reject = reject
+  })
+  return dfd
+}
+```
+
+最终版的 Promise 的实现还是需要经过规范的测试（Promise /A+ 规范测试的工具地址为：https://github.com/promises-aplus/promises-tests），需要暴露一个 deferred 方法（即 exports.deferred 方法），上面提供的代码中我已经将其加了进去。
+
+最后，执行如下代码 npm 安装之后，即可执行测试。
+
+```cmd
+npm i -g promises-aplus-tests
+promises-aplus-tests Promise.js
+```
 
 
 
+### 垃圾回收
 
+#### JavaScript 的内存管理
+
+不管是什么样的计算机程序语言，运行在对应的代码引擎上，对应的使用内存过程大致逻辑是一样的，可以分为这三个步骤：
+
+1. 分配你所需要的系统内存空间；
+
+2. 使用分配到的内存进行读或者写等操作；
+
+3. 不需要使用内存时，将其空间释放或者归还。
+
+与其他需要手动管理内存的语言不太一样的地方是，在 JavaScript 中，当我们创建变量（对象，字符串等）的时候，系统会自动给对象分配对应的内存。
+
+```js
+var a = 123; // 给数值变量分配栈内存
+var etf = "ARK"; // 给字符串分配栈内存
+// 给对象及其包含的值分配堆内存
+var obj = {
+  name: 'tom',
+  age: 13
+}; 
+// 给数组及其包含的值分配内存（就像对象一样）
+var a = [1, null, "PSAC"]; 
+// 给函数（可调用的对象）分配内存
+function sum(a, b){
+  return a + b;
+}
+```
+
+当系统经过一段时间发现这些变量不会再被使用的时候，会通过垃圾回收机制的方式来处理掉这些变量所占用的内存，其实开发者不用过多关心内存问题。即便是这样，我们在开发过程中也需要了解 JavaScript 的内存管理机制，这样才能避免一些不必要的问题，在 JavaScript 中数据类型分为两类：简单类型和引用类型。
+
+对于简单的数据类型，内存是保存在栈（stack）空间中的；复杂数据类型，内存保存在堆（heap）空间中。简而言之，基本就是说明以下两点。
+
+基本类型：这些类型在内存中会占据固定的内存空间，它们的值都保存在栈空间中，直接可以通过值来访问这些；
+
+引用类型：由于引用类型值大小不固定（比如上面的对象可以添加属性等），栈内存中存放地址指向堆内存中的对象，是通过引用来访问的。
+
+因此总结来说：**栈内存中的基本类型，可以通过操作系统直接处理；而堆内存中的引用类型，正是由于可以经常变化，大小不固定，因此需要 JavaScript 的引擎通过垃圾回收机制来处理。**
+
+#### Chrome 内存回收机制
+在 Chrome 浏览器中，JavaScript 的 V8 引擎被限制了内存的使用，根据不同的操作系统（操作系统有 64 位和 32 位的）内存大小会不同，大的可以到 1.4G 的空间，小的只能到 0.7G 的空间。
+
+那么请你思考一下，为什么要去限制内存使用呢？大致是两个原因：V8 最开始是为浏览器而设计的引擎，早些年由于 Web 应用都比较简单，其实并未考虑占据过多的内存空间；另外又由于被 V8 的垃圾回收机制所限制，比如清理大量的内存时会耗费很多时间，这样会引起 JavaScript 执行的线程被挂起，会影响当前执行的页面应用的性能。
+
+下面我们来看下 Chrome 的内存回收机制。Chrome 的 JavaScript 引擎 V8 将堆内存分为两类 **新生代的回收机制和老生代的回收机制**，我们来分别看看这两种堆的内存回收机制是什么原理。
+
+##### 新生代内存回收
+我们先来看下新生代的内存回收的空间，在 64 位操作系统下分配为 32MB，正是因为新生代中的变量存活时间短，不太容易产生太大的内存压力，因此不够大也是可以理解的。首先系统会将分配给新生代的内存空间分为两部分，如下图所示。
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220425173236.png)
+
+图中左边部分表示正在使用的内存空间，右边是目前闲置的内存空间。当浏览器开始进行内存的垃圾回收时，JavaScript 的 V8 引擎会将左边的对象检查一遍。如果引擎检测是存活对象，那么会复制到右边的内存空间去；如果不是存活的对象，则直接进行系统回收。当所有左边的内存里的对象没有了的时候，等再有新生代的对象产生时，上面的部分左右对调，这样来循环处理。
+
+如果是顺序放置的那比较好处理，可以按照上面所说的处理方式。但是如果是下图这样零散的场景怎么处理呢？
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220425173311.png)
+
+图中橙色的块代表存活对象，白色地方代表未分配的内存。正常情况下，由于堆内存是连续分配的，但是也有可能出现上图的这种内存分配情况，这种零散的分配情况就造成了内存碎片，会影响比较大的内存对象的放置。
+
+因此这里介绍一个算法 Scavenge，它主要就是解决上图中内存碎片的情况，在通过算法处理过后，内存中对象的排布都会变成下图这个排列方式，请看效果。
+
+![img](https://s0.lgstatic.com/i/image6/M01/15/DC/CioPOWBFyf2AOkMAAABanoDBiq0058.png)
+
+进行这样的算法处理，明显会让内存排布变得更整齐了，这样就非常方便之后新来的对象的内存分配。
+
+##### 老生代内存回收
+上面讲解了新生代的回收方式，那么新生代中的变量如果经过回收之后依然一直存在，那么就会被放入到老生代内存中。时间长了之后通过几个原因的判断，我们就会把这些变量进行 "晋升"，只要是已经经历过一次 Scavenge 算法回收的，就可以晋升为老生代内存的对象。那么在进入老生代的内存回收机制中，就不能再用 Scavenge 的算法了。Scavenge 的算法是有其适用的场景，而对于内存空间比较大的，就不适合用 Scavenge 算法了。
+
+那么老生代内存中的垃圾回收，是采用什么样的策略进行的呢？这里采用了 Mark-Sweep（标记清除） 和 Mark-Compact（标记整理）的策略，我们先来看下 Mark-Sweep 标记清除的策略。
+
+###### 标记清除（Mark-Sweep）
+
+通过名字你就可以理解，标记清除分为两个阶段：标记阶段和清除阶段。
+
+首先它会遍历堆上的所有的对象，分别对它们打上标记；然后在代码执行过程结束之后，对使用过的变量取消标记。那么没取消标记的就是没有使用过的变量，因此在清除阶段，就会把还有标记的进行整体清除，从而释放内存空间。
+
+听起来这一切都比较完美，但是其实通过标记清除之后，还是会出现上面图中的内存碎片的问题。内存碎片多了之后，如果要新来一个较大的内存对象需要存储，会造成影响。对于通过标记清除产生的内存碎片，还是需要通过另外一种方式进行解决，因此这里就不得不提到标记整理策略（Mark-Compact）了。下面我们就来看看标记整理策略是如何帮助清除内存碎片的问题的。
+
+###### 标记整理（Mark-Compact）
+
+经过标记清除策略调整之后，老生代的内存中因此产生了很多内存碎片，若不清理这些内存碎片，之后会对存储造成影响。
+
+为了方便解决浏览器中的内存碎片问题，标记整理这个策略被提出。这个策略是在标记清除的基础上演进而来的，和标记清除来对比来看，标记整理添加了活动对象整理阶段，处理过程中会将所有的活动对象往一端靠拢，整体移动完成后，直接清理掉边界外的内存。其操作效果如下图所示。
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220425174226.png)
+
+可以看到，老生代内存的管理方式和新生代的内存管理方式区别还是比较大的。Scavenge 算法比较适合内存较小的情况处理；而对于老生代内存较大、变量较多的时候，还是需要采用“标记-清除”结合“标记-整理”这样的方式处理内存问题，并尽量避免内存碎片的产生。
+
+那么以上就是内存的垃圾回收机制的内容了。最后我们再看看日常在开发中，应该注意哪些问题来避免内存泄漏，从而提升你的代码的可靠性。
+
+#### 内存泄漏与优化
+
+平常用 JavaScript 开发代码，内存的泄漏和优化是应该经常留意的。内存泄漏是指 JavaScript 中，已经分配堆内存地址的对象由于长时间未释放或者无法释放，造成了长期占用内存，使内存浪费，最终会导致运行的应用响应速度变慢以及最终崩溃的情况。这种就是内存泄漏，你应该在日常开发和使用浏览器过程中也遇到过，那么我们来回顾一下内存泄漏的场景：
+
+1. 过多的缓存未释放；
+
+2. 闭包太多未释放；
+
+3. 定时器或者回调太多未释放；
+
+4. 太多无效的 DOM 未释放；
+
+5. 全局变量太多未被发现。
+
+那么这些问题该怎么优化呢？
+
+1. **减少不必要的全局变量，使用严格模式避免意外创建全局变量**。例如：
+
+```js
+function foo() {
+    // 全局变量=> window.bar
+    this.bar = '默认this指向全局';
+    // 没有声明变量，实际上是全局变量=>window.bar
+    bar = '全局变量'; 
+}
+foo();
+```
+
+这段代码中，函数内部绑定了太多的 this 变量，虽然第一眼看不出问题，但仔细一分析，其实 this 下的属性默认都是绑定到 window 上的属性，均为全局变量，这一点是非常有必要注意的。
+
+2. **在使用完数据后，及时解除引用（闭包中的变量，DOM 引用，定时器清除）**。例如：
+
+```js
+var someResource = getData();
+setInterval(function() {
+    var node = document.getElementById('Node');
+    if(node) {
+        node.innerHTML = JSON.stringify(someResource));
+        // 定时器也没有清除，可以清除掉
+    }
+    // node、someResource 存储了大量数据，无法回收
+}, 1000);
+```
+
+比如上面代码中就缺少清除 setInterval 的代码，类似这样的代码增多会造成内存的占用过多，这是同样也需要注意的一点。
+
+3. **组织好代码逻辑，避免死循环等造成浏览器卡顿、崩溃的问题**。例如，对于一些比较占用内存的对象提供手工释放内存的方法
+
+```js
+var leakArray = [];
+exports.clear = function () {
+    leakArray = [];
+}
+```
+
+比如这段代码提供了清空该数组内容的方法，使用完成之后可以根据合适业务时机进行操作释放。这样就能较好地避免对象数据量太大造成的内存溢出的问题。
+
+关于内存泄漏这部分，如果你想更好地去排查以及提前避免问题的发生，**最好的解决方式是通过熟练使用 Chrome 的内存剖析工具，多分析多定位 Chrome 帮你分析保留的内存快照，来查看持续占用大量内存的对象。**最好在业务代码上线前做好分析和诊断，之后才能保证线上业务的质量。
+
+### JS 编译流程
+
+#### V8 引擎介绍
+
+我们先看一下当前百花齐放的编程语言，主要分为编译型语言和解释型语言。
+
+编译型语言的特点是在代码运行前编译器直接将对应的代码转换成机器码，运行时不需要再重新翻译，直接可以使用编译后的结果。
+
+解释型语言也是需要将代码转换成机器码，但是和编译型的区别在于运行时需要转换。比较显著的特点是，解释型语言的执行速度要慢于编译型语言，因为解释型语言每次执行都需要把源码转换一次才能执行。
+
+我们比较清楚的，像 Java 和 C++ 都是编译型语言；而 JavaScript 和 ruby 都是解释性语言，它们整体的执行速度都会略慢于编译型的语言。
+
+为了提高运行效率，很多浏览器厂商在也在不断努力。目前市面上有很多种 JS 引擎，例如 JavaScriptCore、chakra、V8 等。而比较现代的 JS 引擎，当数 V8，它引入了 Java 虚拟机和 C++ 编译器的众多技术，和早期的 JS 引擎工作方式已经有了很大的不同。
+
+V8 是众多浏览器的 JS 引擎中性能表现最好的一个，并且它是 Chrome 的内核，Node.js 也是基于 V8 引擎研发的。V8 引擎很具有代表性，因此你有必要好好了解和学习。
+
+那么我们来看下 V8 引擎执行 JS 代码都要经过哪些阶段。
+
+1. Parse 阶段：V8 引擎负责将 JS 代码转换成 AST（抽象语法树）；
+
+2. Ignition 阶段：解释器将 AST 转换为字节码，解析执行字节码也会为下一个阶段优化编译提供需要的信息；
+
+3. TurboFan 阶段：编译器利用上个阶段收集的信息，将字节码优化为可以执行的机器码；
+
+4. Orinoco 阶段：垃圾回收阶段，将程序中不再使用的内存空间进行回收。
+
+其中，生成 AST、生成字节码、生成机器码是比较重要的三个阶段，下面我就对其进行详细分析，看看每个底层阶段到底做了哪些操作，会影响 JS 代码执行的编译执行。
+
+#### 生成 AST
+
+身为一名前端开发，你肯定在日常工作中用过 Eslint 和 Babel 这两个工具，这些工具每个都和 AST 脱不了干系。V8 引擎就是通过编译器（Parse）将源代码解析成 AST 的。
+
+AST 在实际工作中应用场景也比较多，我们来看看抽象语法树的应用场景，大致有下面几个：
+
+1. JS 反编译，语法解析；
+
+2. Babel 编译 ES6 语法；
+
+3. 代码高亮；
+
+4. 关键字匹配；
+
+5. 代码压缩。
+
+这些场景的实现，都离不开通过将 JS 代码解析成 AST 来实现。生成 AST 分为两个阶段，一是词法分析，二是语法分析，我们来分别看下这两个阶段的情况。
+
+1. 词法分析：这个阶段会将源代码拆成最小的、不可再分的词法单元，称为 token。比如这行代码 var a =1；通常会被分解成 var 、a、=、2、; 这五个词法单元。另外刚才代码中的空格在 JavaScript 中是直接忽略的。
+
+2. 语法分析：这个过程是将词法单元转换成一个由元素逐级嵌套所组成的代表了程序语法结构的树，这个树被称为抽象语法树。
+
+下面我们来简单看一下解析成抽象语法树之后是什么样子的，代码如下。
+
+```js
+// 第一段代码
+var a = 1;
+// 第二段代码
+function sum (a,b) {
+  return a + b;
+}
+```
+
+将这两段代码，分别转换成 AST 抽象语法树之后返回的 JSON 格式如下。
+
+1. 第一段代码，编译后的结果：
+
+   ```js
+   {
+     "type": "Program",
+     "start": 0,
+     "end": 10,
+     "body": [
+       {
+         "type": "VariableDeclaration",
+         "start": 0,
+         "end": 10,
+         "declarations": [
+           {
+             "type": "VariableDeclarator",
+             "start": 4,
+             "end": 9,
+             "id": {
+               "type": "Identifier",
+               "start": 4,
+               "end": 5,
+               "name": "a"
+             },
+             "init": {
+               "type": "Literal",
+               "start": 8,
+               "end": 9,
+               "value": 1,
+               "raw": "1"
+             }
+           }
+         ],
+         "kind": "var"
+       }
+     ],
+     "sourceType": "module"
+   }
+   ```
+
+   2. 第二段代码，编译出来的结果：
+
+      ```js
+      {
+        "type": "Program",
+        "start": 0,
+        "end": 38,
+        "body": [
+          {
+            "type": "FunctionDeclaration",
+            "start": 0,
+            "end": 38,
+            "id": {
+              "type": "Identifier",
+              "start": 9,
+              "end": 12,
+              "name": "sum"
+            },
+            "expression": false,
+            "generator": false,
+            "async": false,
+            "params": [
+              {
+                "type": "Identifier",
+                "start": 14,
+                "end": 15,
+                "name": "a"
+              },
+              {
+                "type": "Identifier",
+                "start": 16,
+                "end": 17,
+                "name": "b"
+              }
+            ],
+            "body": {
+              "type": "BlockStatement",
+              "start": 19,
+              "end": 38,
+              "body": [
+                {
+                  "type": "ReturnStatement",
+                  "start": 23,
+                  "end": 36,
+                  "argument": {
+                    "type": "BinaryExpression",
+                    "start": 30,
+                    "end": 35,
+                    "left": {
+                      "type": "Identifier",
+                      "start": 30,
+                      "end": 31,
+                      "name": "a"
+                    },
+                    "operator": "+",
+                    "right": {
+                      "type": "Identifier",
+                      "start": 34,
+                      "end": 35,
+                      "name": "b"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "sourceType": "module"
+      }
+      ```
+
+      从上面编译出的结果可以看到，AST 只是源代码语法结构的一种抽象的表示形式，计算机也不会去直接去识别 JS 代码，转换成抽象语法树也只是识别这一过程中的第一步。
+
+      前面我提到了前端领域经常使用一个工具 Babel，比如现在浏览器还不支持 ES6 语法，需要将其转换成 ES5 语法，这个过程就要借助 Babel 来实现。将 ES6 源码解析成 AST，再将 ES6 语法的抽象语法树转成 ES5 的抽象语法树，最后利用它来生成 ES5 的源代码。另外 ESlint 的原理也大致相同，检测流程也是将源码转换成抽象语法树，再利用它来检测代码规范。
+
+      抽象语法树是一个很重要的概念，需要深入了解，才能更好地帮助我们理解所写代码。如果想自己把代码翻译成 AST，可以到这个地址，代码帖进去就可以转换成相应的 AST：[AST 在线转换](https://astexplorer.net/)。
+
+      好了，接下来我们讨论一下 AST 如何转换成字节码。
+
+#### 生成字节码
+
+将抽象语法树转换为字节码，也就是上面提到的 Ignition 阶段。这个阶段就是将 AST 转换为字节码，但是之前的 V8 版本不会经过这个过程，最早只是通过 AST 直接转换成机器码，而后面几个版本中才对此进行了改进。如果将 AST 直接转换为机器码还是会有一些问题存在的，例如：
+
+1. 直接转换会带来内存占用过大的问题，因为将抽象语法树全部生成了机器码，而机器码相比字节码占用的内存多了很多；
+
+2. 某些 JavaScript 使用场景使用解释器更为合适，解析成字节码，有些代码没必要生成机器码，进而尽可能减少了占用内存过大的问题。
+
+而后，官方在 V8 的 v5.6 版本中还是将抽象语法树转换成字节码这一过程又加上了，重新加入了字节码的处理过程。再然后，V8 重新引进了 Ignition 解释器，将抽象语法树转换成字节码后，内存占用显著下降了，同时也可以使用 JIT 编译器做进一步的优化。
+
+其实字节码是介于 AST 和机器码之间的一种代码，需要将其转换成机器码后才能执行，字节码可以理解为是机器码的一种抽象。Ignition 解释器除了可以快速生成没有优化的字节码外，还可以执行部分字节码。这里你只需要知道这是个中间代码就够了，我们接着看最后一个阶段。
+
+#### 生成机器码
+
+在 Ignition 解释器处理完之后，如果发现一段代码被重复执行多次的情况，生成的字节码以及分析数据会传给 TurboFan 编译器，它会根据分析数据的情况生成优化好的机器码。再执行这段代码之后，只需要直接执行编译后的机器码，这样性能就会更好。
+
+这里简单说一下 TurboFan 编译器，它是 JIT 优化的编译器，因为 V8 引擎是多线程的，TurboFan 的编译线程和生成字节码不会在同一个线程上，这样可以和 Ignition 解释器相互配合着使用，不受另一方的影响。
+
+由 Ignition 解释器收集的分析数据被 TurboFan 编译器使用，主要是通过一种推测优化的技术，生成已经优化的机器码来执行。这个过程我只是通过文字描述，可能你很难理解，你通过一张图来看下整个生成抽象语法树，再到转换成字节码以及机器码的一个过程。
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220425180543.png)
 
 
 
