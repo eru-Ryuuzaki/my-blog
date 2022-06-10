@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>10 | 泛型：如何正确使用泛型约束类型变量？ | 个人笔记</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3a4f17ab81c4094e382bf19a13b55dc2";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <meta name="description" content="...">
+    
+    <link rel="preload" href="/my-blog/assets/css/0.styles.fcf3a78a.css" as="style"><link rel="preload" href="/my-blog/assets/js/app.343c5921.js" as="script"><link rel="preload" href="/my-blog/assets/js/3.0db1a3d9.js" as="script"><link rel="preload" href="/my-blog/assets/js/1.046e28ed.js" as="script"><link rel="preload" href="/my-blog/assets/js/35.8086ed34.js" as="script"><link rel="prefetch" href="/my-blog/assets/js/10.8b37840d.js"><link rel="prefetch" href="/my-blog/assets/js/11.afd542e7.js"><link rel="prefetch" href="/my-blog/assets/js/12.3fd3ec8b.js"><link rel="prefetch" href="/my-blog/assets/js/13.fe3845fb.js"><link rel="prefetch" href="/my-blog/assets/js/14.d80418e3.js"><link rel="prefetch" href="/my-blog/assets/js/15.21a4b058.js"><link rel="prefetch" href="/my-blog/assets/js/16.d9c3a3bd.js"><link rel="prefetch" href="/my-blog/assets/js/17.3e8647d3.js"><link rel="prefetch" href="/my-blog/assets/js/18.f97118b4.js"><link rel="prefetch" href="/my-blog/assets/js/19.76f4e914.js"><link rel="prefetch" href="/my-blog/assets/js/20.dca97e15.js"><link rel="prefetch" href="/my-blog/assets/js/21.8a423300.js"><link rel="prefetch" href="/my-blog/assets/js/22.7f9b8336.js"><link rel="prefetch" href="/my-blog/assets/js/23.385ee21c.js"><link rel="prefetch" href="/my-blog/assets/js/24.1291fe2c.js"><link rel="prefetch" href="/my-blog/assets/js/25.f119abc9.js"><link rel="prefetch" href="/my-blog/assets/js/26.33d4b763.js"><link rel="prefetch" href="/my-blog/assets/js/27.817a9de8.js"><link rel="prefetch" href="/my-blog/assets/js/28.9d1d643b.js"><link rel="prefetch" href="/my-blog/assets/js/29.c187f940.js"><link rel="prefetch" href="/my-blog/assets/js/30.814cbd44.js"><link rel="prefetch" href="/my-blog/assets/js/31.d0378bd7.js"><link rel="prefetch" href="/my-blog/assets/js/32.7f7bcd54.js"><link rel="prefetch" href="/my-blog/assets/js/33.dfee4021.js"><link rel="prefetch" href="/my-blog/assets/js/34.b29d3f6f.js"><link rel="prefetch" href="/my-blog/assets/js/36.e586bbf4.js"><link rel="prefetch" href="/my-blog/assets/js/37.a951cdc5.js"><link rel="prefetch" href="/my-blog/assets/js/38.0a5a06ce.js"><link rel="prefetch" href="/my-blog/assets/js/39.7db6b61b.js"><link rel="prefetch" href="/my-blog/assets/js/4.e2d1b26b.js"><link rel="prefetch" href="/my-blog/assets/js/40.2ec5c12c.js"><link rel="prefetch" href="/my-blog/assets/js/41.7dde43c9.js"><link rel="prefetch" href="/my-blog/assets/js/42.a9cb98fb.js"><link rel="prefetch" href="/my-blog/assets/js/43.6f698f0e.js"><link rel="prefetch" href="/my-blog/assets/js/44.ea9ae46a.js"><link rel="prefetch" href="/my-blog/assets/js/45.70aecc63.js"><link rel="prefetch" href="/my-blog/assets/js/46.f7b724af.js"><link rel="prefetch" href="/my-blog/assets/js/47.4ebc582c.js"><link rel="prefetch" href="/my-blog/assets/js/48.50259964.js"><link rel="prefetch" href="/my-blog/assets/js/49.e06abcc5.js"><link rel="prefetch" href="/my-blog/assets/js/5.72cd0049.js"><link rel="prefetch" href="/my-blog/assets/js/50.7eeb2bb5.js"><link rel="prefetch" href="/my-blog/assets/js/51.550b6ef5.js"><link rel="prefetch" href="/my-blog/assets/js/52.2e5a9e1d.js"><link rel="prefetch" href="/my-blog/assets/js/53.e2455bad.js"><link rel="prefetch" href="/my-blog/assets/js/54.50458c76.js"><link rel="prefetch" href="/my-blog/assets/js/55.22a63da0.js"><link rel="prefetch" href="/my-blog/assets/js/56.4574676f.js"><link rel="prefetch" href="/my-blog/assets/js/57.f33bfa96.js"><link rel="prefetch" href="/my-blog/assets/js/58.4fde6427.js"><link rel="prefetch" href="/my-blog/assets/js/59.e7c2752a.js"><link rel="prefetch" href="/my-blog/assets/js/6.4972be7e.js"><link rel="prefetch" href="/my-blog/assets/js/60.d6bd905d.js"><link rel="prefetch" href="/my-blog/assets/js/61.1cdfab6c.js"><link rel="prefetch" href="/my-blog/assets/js/62.3bf25be2.js"><link rel="prefetch" href="/my-blog/assets/js/63.f1691914.js"><link rel="prefetch" href="/my-blog/assets/js/64.346bd767.js"><link rel="prefetch" href="/my-blog/assets/js/65.761b4e3d.js"><link rel="prefetch" href="/my-blog/assets/js/66.ffc675f1.js"><link rel="prefetch" href="/my-blog/assets/js/67.1cb389b6.js"><link rel="prefetch" href="/my-blog/assets/js/68.9162fab0.js"><link rel="prefetch" href="/my-blog/assets/js/69.d0666bea.js"><link rel="prefetch" href="/my-blog/assets/js/7.09e621ab.js"><link rel="prefetch" href="/my-blog/assets/js/70.6a029ebb.js"><link rel="prefetch" href="/my-blog/assets/js/71.77354448.js"><link rel="prefetch" href="/my-blog/assets/js/72.4bf9f2c9.js"><link rel="prefetch" href="/my-blog/assets/js/73.f8406f8b.js"><link rel="prefetch" href="/my-blog/assets/js/74.f5138f16.js"><link rel="prefetch" href="/my-blog/assets/js/75.6885e049.js"><link rel="prefetch" href="/my-blog/assets/js/76.53d0d3bf.js"><link rel="prefetch" href="/my-blog/assets/js/77.c1cb6fa6.js"><link rel="prefetch" href="/my-blog/assets/js/8.0f8c4903.js"><link rel="prefetch" href="/my-blog/assets/js/9.f9bea8b5.js">
+    <link rel="stylesheet" href="/my-blog/assets/css/0.styles.fcf3a78a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-130b300a><div data-v-130b300a><div class="password-shadow password-wrapper-out" style="display:none;" data-v-25ba6db2 data-v-130b300a data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2>个人笔记</h3> <p class="description" data-v-25ba6db2 data-v-25ba6db2>...</p> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div class="hide" data-v-130b300a><header class="navbar" data-v-130b300a><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/my-blog/" class="home-link router-link-active"><!----> <span class="site-name">个人笔记</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-130b300a></div> <aside class="sidebar" data-v-130b300a><div class="personal-info-wrapper" data-v-39576ba9 data-v-130b300a><!----> <!----> <div class="num" data-v-39576ba9><div data-v-39576ba9><h3 data-v-39576ba9>56</h3> <h6 data-v-39576ba9>文章</h6></div> <div data-v-39576ba9><h3 data-v-39576ba9>0</h3> <h6 data-v-39576ba9>标签</h6></div></div> <ul class="social-links" data-v-39576ba9></ul> <hr data-v-39576ba9></div> <nav class="nav-links"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav> <ul class="sidebar-links"><li><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/" aria-current="page" class="sidebar-link">前言</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>HTML</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JavaScript</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>TS（已ok）</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/05.html" class="sidebar-link">05</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/06.html" class="sidebar-link">06</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/07.html" class="sidebar-link">07</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/08.html" class="sidebar-link">08</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/09.html" class="sidebar-link">09</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/10.html" class="active sidebar-link">10</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/11.html" class="sidebar-link">11</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/12.html" class="sidebar-link">12</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/13.html" class="sidebar-link">13</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/14.html" class="sidebar-link">14</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/15.html" class="sidebar-link">15</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/16.html" class="sidebar-link">16</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/17.html" class="sidebar-link">17</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/18.html" class="sidebar-link">18</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/19.html" class="sidebar-link">19</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/20.html" class="sidebar-link">20</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/结束语.html" class="sidebar-link">结束语</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端安全</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端工程化</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端框架</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>数据结构与算法</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>浏览器原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>计算机网络</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>面经</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-25ba6db2 data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2></h3> <!----> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div data-v-130b300a><main class="page"><section><div class="page-title"><h1 class="title">10 | 泛型：如何正确使用泛型约束类型变量？</h1> <div data-v-f875f3fc><!----> <!----> <!----> <!----></div></div> <div class="theme-reco-content content__default"><h1 id="_10-泛型-如何正确使用泛型约束类型变量"><a href="#_10-泛型-如何正确使用泛型约束类型变量" class="header-anchor">#</a> 10 | 泛型：如何正确使用泛型约束类型变量？</h1> <p>2021/06/03 乾元</p> <p>35.64M</p> <p>00:00/13:40</p> <p>看视频</p> <p>最近几年，作为一名前端面试官，每次提问候选人时，我会经常提问 TypeScirpt 的这两个知识点：一个是如何使用 TypeScript 实现与 call（或者 apply） 功能类似的函数，重在考察候选人对泛型的应用；另一个是什么是泛型？泛型的作用是什么？重在考察候选人对泛型的理解。</p> <p>如今，TypeScript 可谓是前端必须掌握的基本技能之一，而泛型则是 TypeScript 中非常基本、非常精华（有挑战）的特性，属于 TypeScript 入门（重在基础知识）和进阶（重在应用实践）之间衔接和升华的内容。因此，我把泛型的相关知识放在了 10 讲进行讲解。</p> <p>在我看来，掌握了泛型后，就可以随心所欲地使用 TypeScript 了。</p> <blockquote><p>学习建议：使用 VS Code 新建一个 10.ts 文件，并尝试这一讲中所有的示例。</p></blockquote> <h3 id="什么是泛型"><a href="#什么是泛型" class="header-anchor">#</a> 什么是泛型？</h3> <p>关于什么是泛型这个问题不是太好回答，比如在面试中，如果有候选人反过来问我这个问题，可能我也给不出一个特别标准的答案。</p> <p>不过，我们可以借用 Java 中泛型的释义来回答这个问题：泛型指的是类型参数化，即将原来某种具体的类型进行参数化。和定义函数参数一样，我们可以给泛型定义若干个类型参数，并在调用时给泛型传入明确的类型参数。设计泛型的目的在于有效约束类型成员之间的关系，比如函数参数和返回值、类或者接口成员和方法之间的关系。</p> <blockquote><p><strong>Tips：</strong>
+请一定要记住这个答案哦~在某天面试时，如果碰到的面试官恰好是我，那么你至少已经答对了一半 TypeScript 的面试题；至于另外一半（实现 call）就作为这一讲的课后思考题，学完后，你自然能回答得上（思路）来。</p></blockquote> <h3 id="泛型类型参数"><a href="#泛型类型参数" class="header-anchor">#</a> 泛型类型参数</h3> <p>泛型最常用的场景是用来约束函数参数的类型，我们可以给函数定义若干个被调用时才会传入明确类型的参数。</p> <p>比如以下定义的一个 reflect 函数 ，它可以接收一个任意类型的参数，并原封不动地返回参数的值和类型，那我们该如何描述这个函数呢？好像得用上 unknown 了（其实我想说的是 any，因为 any is 魔鬼，所以还是用 unknown 吧）。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function reflect(param: unknown) {
+  return param;
+}
+const str = reflect('string'); // str 类型是 unknown
+const num = reflect(1); // num 类型 unknown
+</code></pre></div><p>此时，reflect 函数虽然可以接收一个任意类型的参数并原封不动地返回参数的值，不过返回值类型不符合我们的预期。因为我们希望返回值类型与入参类型一一对应（比如 number 对 number、string 对 string），而不是无论入参是什么类型，返回值一律是 unknown。</p> <p>此时，泛型正好可以满足这样的诉求，那如何定义一个泛型参数呢？首先，我们把参数 param 的类型定义为一个（类型层面的）参数、变量，而不是一个明确的类型，等到函数调用时再传入明确的类型。</p> <p>比如我们可以通过尖括号 &lt;&gt; 语法给函数定义一个泛型参数 P，并指定 param 参数的类型为 P ，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function reflect&lt;P&gt;(param: P) {
+  return param;
+}
+</code></pre></div><p>这里我们可以看到，尖括号中的 P 表示泛型参数的定义，param 后的 P 表示参数的类型是泛型 P（即类型受 P 约束）。</p> <p>我们也可以使用泛型显式地注解返回值的类型，虽然没有这个必要（因为返回值的类型可以基于上下文推断出来）。比如调用如下所示的 reflect 时，我们可以通过尖括号 &lt;&gt; 语法给泛型参数 P 显式地传入一个明确的类型。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function reflect&lt;P&gt;(param: P):P {
+  return param;
+}
+</code></pre></div><p>然后在调用函数时，我们也通过 &lt;&gt; 语法指定了如下所示的 string、number 类型入参，相应地，reflectStr 的类型是 string，reflectNum 的类型是 number。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const reflectStr = reflect&lt;string&gt;('string'); // str 类型是 string
+const reflectNum = reflect&lt;number&gt;(1); // num 类型 number
+</code></pre></div><p>另外，如果调用泛型函数时受泛型约束的参数有传值，泛型参数的入参可以从参数的类型中进行推断，而无须再显式指定类型（可缺省），因此上边的示例可以简写为如下示例：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const reflectStr2 = reflect('string'); // str 类型是 string
+const reflectNum2 = reflect(1); // num 类型 number
+</code></pre></div><p>泛型不仅可以约束函数整个参数的类型，还可以约束参数属性、成员的类型，比如参数的类型可以是数组、对象，如下示例：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function reflectArray&lt;P&gt;(param: P[]) {
+  return param;
+}
+const reflectArr = reflectArray([1, '1']); // reflectArr 是 (string | number)[]
+</code></pre></div><p>这里我们约束了 param 的类型是数组，数组的元素类型是泛型入参。</p> <p>通过泛型，我们可以约束函数参数和返回值的类型关系。举一个我们比较熟悉的实际场景 React Hooks useState 为例，如下示例中，第 2 行 return 的元组（因为 useState 返回的是长度为 2、元素类型固定的数组）的第一个元素的类型就是泛型 S，第二个函数类型元素的参数类型也是泛型 S。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function useState&lt;S&gt;(state: S, initialValue?: S) {
+  return [state, (s: S) =&gt; void 0] as unknown as [S, (s: S) =&gt; void];
+}
+</code></pre></div><p><strong>注意：函数的泛型入参必须和参数/参数成员建立有效的约束关系才有实际意义。</strong> 比如在下面示例中，我们定义了一个仅约束返回值类型的泛型，它是没有任何意义的。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function uselessGenerics&lt;P&gt;(): P {
+  return void 0 as unknown as P;
+}
+</code></pre></div><p>我们可以给函数定义任何个数的泛型入参，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function reflectExtraParams&lt;P, Q&gt;(p1: P, p2: Q): [P, Q] {
+  return [p1, p2];
+}
+</code></pre></div><p>在上述代码中，我们定义了一个拥有两个泛型入参（P 和 Q）的函数 reflectExtraParams，并通过 P 和 Q 约束函数参数 p1、p2 和返回值的类型。</p> <h3 id="泛型类"><a href="#泛型类" class="header-anchor">#</a> 泛型类</h3> <p>在类的定义中，我们还可以使用泛型用来约束构造函数、属性、方法的类型，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>class Memory&lt;S&gt; {
+  store: S;
+  constructor(store: S) {
+    this.store = store;
+  }
+  set(store: S) {
+    this.store = store;
+  }
+  get() {
+    return this.store;
+  }
+}
+const numMemory = new Memory&lt;number&gt;(1); // &lt;number&gt; 可缺省
+const getNumMemory = numMemory.get(); // 类型是 number
+numMemory.set(2); // 只能写入 number 类型
+const strMemory = new Memory(''); // 缺省 &lt;string&gt;
+const getStrMemory = strMemory.get(); // 类型是 string
+strMemory.set('string'); // 只能写入 string 类型
+</code></pre></div><p>首先，我们定义了一个支持读写的寄存器类 Memory，并使用泛型约束了 Memory 类的构造器函数、set 和 get 方法形参的类型，最后实例化了泛型入参分别是 number 和 string 类型的两种寄存器。</p> <p>泛型类和泛型函数类似的地方在于，在创建类实例时，如果受泛型约束的参数传入了明确值，则泛型入参（确切地说是传入的类型）可缺省，比如第 14 行、第 18 行，<code>&lt;number&gt;</code>、<code>&lt;string&gt;</code> 泛型入参就是可以缺省的。</p> <p><strong>小贴士：对于 React 开发者而言，组件也支持泛型，如下代码所示。</strong></p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function GenericCom&lt;P&gt;(props: { prop1: string }) {
+  return &lt;&gt;&lt;/&gt;;
+};
+&lt;GenericCom&lt;{ name: string; }&gt; prop1=&quot;1&quot; ... /&gt;
+</code></pre></div><p>在第 1 行~第 3 行，我们定义了一个泛型组件 GenericCom，它接收了一个类型入参 P。在第 4 行，通过 JSX 语法创建组件元素的同时，我们还显式指定了接口类型 { name: string } 作为入参。</p> <blockquote><p><strong>注意</strong>：这块的语法稍微有些奇怪，我们记住就可以了。</p></blockquote> <h3 id="泛型类型"><a href="#泛型类型" class="header-anchor">#</a> 泛型类型</h3> <p>02 讲中我们提到，我们可以使用 Array&lt;类型&gt; 的语法来定义数组类型，这里的 Array 本身就是一种类型。</p> <p>在 TypeScript 中，类型本身就可以被定义为拥有不明确的类型参数的泛型，并且可以接收明确类型作为入参，从而衍生出更具体的类型，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const reflectFn: &lt;P&gt;(param: P) =&gt; P = reflect; // ok
+</code></pre></div><p>这里我们为变量 reflectFn 显式添加了泛型类型注解，并将 reflect 函数作为值赋给了它。</p> <p>我们也可以把 reflectFn 的类型注解提取为一个能被复用的类型别名或者接口，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>type ReflectFuncton = &lt;P&gt;(param: P) =&gt; P;
+interface IReflectFuncton {
+  &lt;P&gt;(param: P): P
+}
+const reflectFn2: ReflectFuncton = reflect;
+const reflectFn3: IReflectFuncton = reflect;
+</code></pre></div><p>将类型入参的定义移动到类型别名或接口名称后，此时定义的一个接收具体类型入参后返回一个新类型的类型就是泛型类型。</p> <p>如下示例中，我们定义了两个可以接收入参 P 的泛型类型（GenericReflectFunction 和 IGenericReflectFunction ）。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>type GenericReflectFunction&lt;P&gt; = (param: P) =&gt; P;
+interface IGenericReflectFunction&lt;P&gt; {
+  (param: P): P;
+}
+const reflectFn4: GenericReflectFunction&lt;string&gt; = reflect; // 具象化泛型
+const reflectFn5: IGenericReflectFunction&lt;number&gt; = reflect; // 具象化泛型
+const reflectFn3Return = reflectFn4('string'); // 入参和返回值都必须是 string 类型
+const reflectFn4Return = reflectFn5(1); //  入参和返回值都必须是 number 类型
+</code></pre></div><p>在泛型定义中，我们甚至可以使用一些类型操作符进行运算表达，使得泛型可以根据入参的类型衍生出各异的类型，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>type StringOrNumberArray&lt;E&gt; = E extends string | number ? E[] : E;
+type StringArray = StringOrNumberArray&lt;string&gt;; // 类型是 string[]
+type NumberArray = StringOrNumberArray&lt;number&gt;; // 类型是 number[]
+type NeverGot = StringOrNumberArray&lt;boolean&gt;; // 类型是 boolean
+</code></pre></div><p>这里我们定义了一个泛型，如果入参是 number | string 就会生成一个数组类型，否则就生成入参类型。而且，我们还使用了与 JavaScript 三元表达式完全一致的语法来表达类型运算的逻辑关系，15 讲中会更详细地介绍。</p> <p><strong>发散一下，如果我们给上面这个泛型传入了一个 string | boolean 联合类型作为入参，将会得到什么类型呢？且看如下所示示例：</strong></p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>type BooleanOrString = string | boolean;
+type WhatIsThis = StringOrNumberArray&lt;BooleanOrString&gt;; // 好像应该是 string | boolean ?
+type BooleanOrStringGot = BooleanOrString extends string | number ? BooleanOrString[] : BooleanOrString; //  string | boolean
+</code></pre></div><p>嗯？难道不是 boolean | string ？</p> <p>还真不是，如果你使用 VS Code 尝试了这个示例，并 hover 类型别名 WhatIsThis ，那么你会发现显示的类型将是 boolean | string[]。</p> <p>BooleanOrStringGot 和 WhatIsThis 这两个类型别名的类型居然不一样，这 TM 是什么逻辑？这个就是所谓的分配条件类型（Distributive Conditional Types）。</p> <p><strong>关于分配条件类型这个概念，官方的释义</strong>：在条件类型判断的情况下（比如上边示例中出现的 extends），如果入参是联合类型，则会被拆解成一个个独立的（原子）类型（成员）进行类型运算。</p> <p>比如上边示例中的 string | boolean 入参，先被拆解成 string 和 boolean 这两个独立类型，再分别判断是否是 string | number 类型的子集。<strong>因为 string 是子集而 boolean 不是，所以最终我们得到的 WhatIsThis 的类型是 boolean | string[]。</strong></p> <p>能接受入参的泛型类型和函数一样，都可以对入参类型进行计算并返回新的类型，像是在做类型运算。</p> <p>利用泛型，我们可以抽象封装出很多有用、复杂的类型约束。比如在 Redux Model 中约束 State 和 Reducers 的类型定义关系，我们可以通过如下所示代码定义了一个既能接受 State 类型入参，又包含 state 和 reducers 这两个属性的接口类型泛型，并通过 State 入参约束了泛型的 state 属性和 reducers 属性下 action 索引属性的类型关系。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>interface ReduxModel&lt;State&gt; {
+  state: State,
+  reducers: {
+    [action: string]: (state: State, action: any) =&gt; State
+  }
+}
+</code></pre></div><p>然后根据实际需要，我们传入了一个具体的 State 类型具象化 ReduxModel，并约束了一个实际的 model，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>type ModelInterface = { id: number; name: string };
+const model: ReduxModel&lt;ModelInterface&gt; = {
+  state: { id: 1, name: '乾元' }, //  ok 类型必须是 ModelInterface
+  reducers: {
+    setId: (state, action: { payload: number }) =&gt; ({
+      ...state,
+      id: action.payload // ok must be number
+    }),
+    setName: (state, action: { payload: string }) =&gt; ({
+      ...state,
+      name: action.payload // ok must be string
+    })
+  }
+}
+</code></pre></div><p>在上述示例中，model 对象的 state 属性、reducers 属性的 setId、setName 方法的第一个参数 state 的类型都受到 ReduxModel 泛型入参 ModelInterface 的约束。</p> <blockquote><p><strong>注意：枚举类型不支持泛型。</strong></p></blockquote> <h3 id="泛型约束"><a href="#泛型约束" class="header-anchor">#</a> 泛型约束</h3> <p>前面提到了泛型就像是类型的函数，它可以抽象、封装并接收（类型）入参，而泛型的入参也拥有类似函数入参的特性。因此，我们可以把泛型入参限定在一个相对更明确的集合内，以便对入参进行约束。</p> <p>比如最前边提到的原封不动返回参数的 reflect 函数，我们希望把接收参数的类型限定在几种原始类型的集合中，此时就可以使用“泛型入参名 extends 类型”语法达到这个目的，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function reflectSpecified&lt;P extends number | string | boolean&gt;(param: P):P {
+  return param;
+}
+reflectSpecified('string'); // ok
+reflectSpecified(1); // ok
+reflectSpecified(true); // ok
+reflectSpecified(null); // ts(2345) 'null' 不能赋予类型 'number | string | boolean'
+</code></pre></div><p>在上述示例中，我们限定了泛型入参只能是 number | string | boolean 的子集。</p> <p>同样，我们也可以把接口泛型入参约束在特定的范围内，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>interface ReduxModelSpecified&lt;State extends { id: number; name: string }&gt; {
+  state: State
+}
+type ComputedReduxModel1 = ReduxModelSpecified&lt;{ id: number; name: string; }&gt;; // ok
+type ComputedReduxModel2 = ReduxModelSpecified&lt;{ id: number; name: string; age: number; }&gt;; // ok
+type ComputedReduxModel3 = ReduxModelSpecified&lt;{ id: string; name: number; }&gt;; // ts(2344)
+type ComputedReduxModel4 = ReduxModelSpecified&lt;{ id: number;}&gt;; // ts(2344)
+</code></pre></div><p>在上述示例中，ReduxModelSpecified 泛型仅接收 { id: number; name: string } 接口类型的子类型作为入参。</p> <p>我们还可以在多个不同的泛型入参之间设置约束关系，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>interface ObjSetter {
+  &lt;O extends {}, K extends keyof O, V extends O[K]&gt;(obj: O, key: K, value: V): V; 
+}
+const setValueOfObj: ObjSetter = (obj, key, value) =&gt; (obj[key] = value);
+setValueOfObj({ id: 1, name: 'name' }, 'id', 2); // ok
+setValueOfObj({ id: 1, name: 'name' }, 'name', 'new name'); // ok
+setValueOfObj({ id: 1, name: 'name' }, 'age', 2); // ts(2345)
+setValueOfObj({ id: 1, name: 'name' }, 'id', '2'); // ts(2345)
+</code></pre></div><p>在设置对象属性值的函数类型时，它拥有 3 个泛型入参：第 1 个是对象，第 2 个是第 1 个入参属性名集合的子集，第 3 个是指定属性类型的子类型（这里使用了 keyof 操作符，15 讲中我们会详细介绍 TypeScript 类型相关的操作符）。</p> <p>另外，泛型入参与函数入参还有一个相似的地方在于，它也可以给泛型入参指定默认值（默认类型），且语法和指定函数默认参数完全一致，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>interface ReduxModelSpecified2&lt;State = { id: number; name: string }&gt; {
+  state: State
+}
+type ComputedReduxModel5 = ReduxModelSpecified2; // ok
+type ComputedReduxModel6 = ReduxModelSpecified2&lt;{ id: number; name: string; }&gt;; // ok
+type ComputedReduxModel7 = ReduxModelSpecified; // ts(2314) 缺少一个类型参数
+</code></pre></div><p>在上述示例中，我们定义了入参有默认类型的泛型 ReduxModelSpecified2，因此使用 ReduxModelSpecified2 时类型入参可缺省。而 ReduxModelSpecified 的入参没有默认值，所以缺省入参时会提示一个类型错误。</p> <p>泛型入参的约束与默认值还可以组合使用，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>interface ReduxModelMixed&lt;State extends {} = { id: number; name: string }&gt; {
+  state: State
+}
+</code></pre></div><p>这里我们限定了泛型 ReduxModelMixed 入参 State 必须是 {} 类型的子类型，同时也指定了入参缺省时的默认类型是接口类型 { id: number; name: string; }。</p> <h3 id="小结与预告"><a href="#小结与预告" class="header-anchor">#</a> 小结与预告</h3> <p>这一讲关于泛型的知识点看起来不是太多，不过难点在于如何理解泛型。</p> <p>我们可以试着将泛型理解为类型中的函数，并通过抽象、封装类型运算逻辑实现类型可复用，以便更好地掌握泛型。</p> <p>这里插播一道思考题：如何使用 TypeScript 实现 call？欢迎你在留言区与我互动、交流。</p> <blockquote><p>提示：因为仅凭本讲的内容可能无法回答这个问题，所以这里我提示几个关键词 Parameters、ReturnType。这些关键词与 Array 一样，都是 TypeScript 内封装好的泛型（第 14 讲里会介绍官方内置泛型），你可以在谷歌、百度搜索引擎或者官方文档中搜索一下 “TypeScript + 关键词” 提前获取更多信息。</p></blockquote> <p>11 讲我们将进入进阶课程的学习，敬请期待。</p> <p>另外，如果你觉得本专栏有价值，欢迎分享给更多好友哦~</p></div></section> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/09.html" class="prev">
+            09
+          </a></span> <span class="next"><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/11.html">
+            11
+          </a></span></p></div> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:12rem;" data-v-cb1513f6><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/10.html#什么是泛型" class="sidebar-link reco-side-什么是泛型" data-v-cb1513f6>什么是泛型？</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/10.html#泛型类型参数" class="sidebar-link reco-side-泛型类型参数" data-v-cb1513f6>泛型类型参数</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/10.html#泛型类" class="sidebar-link reco-side-泛型类" data-v-cb1513f6>泛型类</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/10.html#泛型类型" class="sidebar-link reco-side-泛型类型" data-v-cb1513f6>泛型类型</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/10.html#泛型约束" class="sidebar-link reco-side-泛型约束" data-v-cb1513f6>泛型约束</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/10.html#小结与预告" class="sidebar-link reco-side-小结与预告" data-v-cb1513f6>小结与预告</a></li></ul></main> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/my-blog/assets/js/app.343c5921.js" defer></script><script src="/my-blog/assets/js/3.0db1a3d9.js" defer></script><script src="/my-blog/assets/js/1.046e28ed.js" defer></script><script src="/my-blog/assets/js/35.8086ed34.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>11 | 类型守卫：如何有效地保障类型的安全性？ | 个人笔记</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3a4f17ab81c4094e382bf19a13b55dc2";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <meta name="description" content="...">
+    
+    <link rel="preload" href="/my-blog/assets/css/0.styles.fcf3a78a.css" as="style"><link rel="preload" href="/my-blog/assets/js/app.343c5921.js" as="script"><link rel="preload" href="/my-blog/assets/js/3.0db1a3d9.js" as="script"><link rel="preload" href="/my-blog/assets/js/1.046e28ed.js" as="script"><link rel="preload" href="/my-blog/assets/js/36.e586bbf4.js" as="script"><link rel="prefetch" href="/my-blog/assets/js/10.8b37840d.js"><link rel="prefetch" href="/my-blog/assets/js/11.afd542e7.js"><link rel="prefetch" href="/my-blog/assets/js/12.3fd3ec8b.js"><link rel="prefetch" href="/my-blog/assets/js/13.fe3845fb.js"><link rel="prefetch" href="/my-blog/assets/js/14.d80418e3.js"><link rel="prefetch" href="/my-blog/assets/js/15.21a4b058.js"><link rel="prefetch" href="/my-blog/assets/js/16.d9c3a3bd.js"><link rel="prefetch" href="/my-blog/assets/js/17.3e8647d3.js"><link rel="prefetch" href="/my-blog/assets/js/18.f97118b4.js"><link rel="prefetch" href="/my-blog/assets/js/19.76f4e914.js"><link rel="prefetch" href="/my-blog/assets/js/20.dca97e15.js"><link rel="prefetch" href="/my-blog/assets/js/21.8a423300.js"><link rel="prefetch" href="/my-blog/assets/js/22.7f9b8336.js"><link rel="prefetch" href="/my-blog/assets/js/23.385ee21c.js"><link rel="prefetch" href="/my-blog/assets/js/24.1291fe2c.js"><link rel="prefetch" href="/my-blog/assets/js/25.f119abc9.js"><link rel="prefetch" href="/my-blog/assets/js/26.33d4b763.js"><link rel="prefetch" href="/my-blog/assets/js/27.817a9de8.js"><link rel="prefetch" href="/my-blog/assets/js/28.9d1d643b.js"><link rel="prefetch" href="/my-blog/assets/js/29.c187f940.js"><link rel="prefetch" href="/my-blog/assets/js/30.814cbd44.js"><link rel="prefetch" href="/my-blog/assets/js/31.d0378bd7.js"><link rel="prefetch" href="/my-blog/assets/js/32.7f7bcd54.js"><link rel="prefetch" href="/my-blog/assets/js/33.dfee4021.js"><link rel="prefetch" href="/my-blog/assets/js/34.b29d3f6f.js"><link rel="prefetch" href="/my-blog/assets/js/35.8086ed34.js"><link rel="prefetch" href="/my-blog/assets/js/37.a951cdc5.js"><link rel="prefetch" href="/my-blog/assets/js/38.0a5a06ce.js"><link rel="prefetch" href="/my-blog/assets/js/39.7db6b61b.js"><link rel="prefetch" href="/my-blog/assets/js/4.e2d1b26b.js"><link rel="prefetch" href="/my-blog/assets/js/40.2ec5c12c.js"><link rel="prefetch" href="/my-blog/assets/js/41.7dde43c9.js"><link rel="prefetch" href="/my-blog/assets/js/42.a9cb98fb.js"><link rel="prefetch" href="/my-blog/assets/js/43.6f698f0e.js"><link rel="prefetch" href="/my-blog/assets/js/44.ea9ae46a.js"><link rel="prefetch" href="/my-blog/assets/js/45.70aecc63.js"><link rel="prefetch" href="/my-blog/assets/js/46.f7b724af.js"><link rel="prefetch" href="/my-blog/assets/js/47.4ebc582c.js"><link rel="prefetch" href="/my-blog/assets/js/48.50259964.js"><link rel="prefetch" href="/my-blog/assets/js/49.e06abcc5.js"><link rel="prefetch" href="/my-blog/assets/js/5.72cd0049.js"><link rel="prefetch" href="/my-blog/assets/js/50.7eeb2bb5.js"><link rel="prefetch" href="/my-blog/assets/js/51.550b6ef5.js"><link rel="prefetch" href="/my-blog/assets/js/52.2e5a9e1d.js"><link rel="prefetch" href="/my-blog/assets/js/53.e2455bad.js"><link rel="prefetch" href="/my-blog/assets/js/54.50458c76.js"><link rel="prefetch" href="/my-blog/assets/js/55.22a63da0.js"><link rel="prefetch" href="/my-blog/assets/js/56.4574676f.js"><link rel="prefetch" href="/my-blog/assets/js/57.f33bfa96.js"><link rel="prefetch" href="/my-blog/assets/js/58.4fde6427.js"><link rel="prefetch" href="/my-blog/assets/js/59.e7c2752a.js"><link rel="prefetch" href="/my-blog/assets/js/6.4972be7e.js"><link rel="prefetch" href="/my-blog/assets/js/60.d6bd905d.js"><link rel="prefetch" href="/my-blog/assets/js/61.1cdfab6c.js"><link rel="prefetch" href="/my-blog/assets/js/62.3bf25be2.js"><link rel="prefetch" href="/my-blog/assets/js/63.f1691914.js"><link rel="prefetch" href="/my-blog/assets/js/64.346bd767.js"><link rel="prefetch" href="/my-blog/assets/js/65.761b4e3d.js"><link rel="prefetch" href="/my-blog/assets/js/66.ffc675f1.js"><link rel="prefetch" href="/my-blog/assets/js/67.1cb389b6.js"><link rel="prefetch" href="/my-blog/assets/js/68.9162fab0.js"><link rel="prefetch" href="/my-blog/assets/js/69.d0666bea.js"><link rel="prefetch" href="/my-blog/assets/js/7.09e621ab.js"><link rel="prefetch" href="/my-blog/assets/js/70.6a029ebb.js"><link rel="prefetch" href="/my-blog/assets/js/71.77354448.js"><link rel="prefetch" href="/my-blog/assets/js/72.4bf9f2c9.js"><link rel="prefetch" href="/my-blog/assets/js/73.f8406f8b.js"><link rel="prefetch" href="/my-blog/assets/js/74.f5138f16.js"><link rel="prefetch" href="/my-blog/assets/js/75.6885e049.js"><link rel="prefetch" href="/my-blog/assets/js/76.53d0d3bf.js"><link rel="prefetch" href="/my-blog/assets/js/77.c1cb6fa6.js"><link rel="prefetch" href="/my-blog/assets/js/8.0f8c4903.js"><link rel="prefetch" href="/my-blog/assets/js/9.f9bea8b5.js">
+    <link rel="stylesheet" href="/my-blog/assets/css/0.styles.fcf3a78a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-130b300a><div data-v-130b300a><div class="password-shadow password-wrapper-out" style="display:none;" data-v-25ba6db2 data-v-130b300a data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2>个人笔记</h3> <p class="description" data-v-25ba6db2 data-v-25ba6db2>...</p> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div class="hide" data-v-130b300a><header class="navbar" data-v-130b300a><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/my-blog/" class="home-link router-link-active"><!----> <span class="site-name">个人笔记</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-130b300a></div> <aside class="sidebar" data-v-130b300a><div class="personal-info-wrapper" data-v-39576ba9 data-v-130b300a><!----> <!----> <div class="num" data-v-39576ba9><div data-v-39576ba9><h3 data-v-39576ba9>56</h3> <h6 data-v-39576ba9>文章</h6></div> <div data-v-39576ba9><h3 data-v-39576ba9>0</h3> <h6 data-v-39576ba9>标签</h6></div></div> <ul class="social-links" data-v-39576ba9></ul> <hr data-v-39576ba9></div> <nav class="nav-links"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav> <ul class="sidebar-links"><li><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/" aria-current="page" class="sidebar-link">前言</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>HTML</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JavaScript</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>TS（已ok）</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/05.html" class="sidebar-link">05</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/06.html" class="sidebar-link">06</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/07.html" class="sidebar-link">07</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/08.html" class="sidebar-link">08</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/09.html" class="sidebar-link">09</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/10.html" class="sidebar-link">10</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/11.html" class="active sidebar-link">11</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/12.html" class="sidebar-link">12</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/13.html" class="sidebar-link">13</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/14.html" class="sidebar-link">14</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/15.html" class="sidebar-link">15</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/16.html" class="sidebar-link">16</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/17.html" class="sidebar-link">17</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/18.html" class="sidebar-link">18</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/19.html" class="sidebar-link">19</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/20.html" class="sidebar-link">20</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/结束语.html" class="sidebar-link">结束语</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端安全</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端工程化</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端框架</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>数据结构与算法</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>浏览器原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>计算机网络</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>面经</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-25ba6db2 data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2></h3> <!----> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div data-v-130b300a><main class="page"><section><div class="page-title"><h1 class="title">11 | 类型守卫：如何有效地保障类型的安全性？</h1> <div data-v-f875f3fc><!----> <!----> <!----> <!----></div></div> <div class="theme-reco-content content__default"><h1 id="_11-类型守卫-如何有效地保障类型的安全性"><a href="#_11-类型守卫-如何有效地保障类型的安全性" class="header-anchor">#</a> 11 | 类型守卫：如何有效地保障类型的安全性？</h1> <p>2021/06/08 乾元</p> <p>32.56M</p> <p>00:00/12:29</p> <p>看视频</p> <p>在前面 10 讲中，我们学习了如何选择 TypeScript IDE 和搭建开发环境，也学习了原始类型、字面量类型、数组类型、函数类型、类类型、接口类型、类型别名、联合与交叉类型、枚举类型、泛型等类型元素，以及类型推断、类型断言、类型缩小、类型放大等特性。这些类型元素和特性，构成了 TypeScript 的基础认知。</p> <p>接下来我们将通过学习 TypeScript 进阶和业务实战两个模块的内容提升对 TypeScript 的理解，其中有 5 讲会介绍 TypeScript 应用较为广泛的进阶知识点，剩余 6 讲则围绕 TypeScript 在业务中的实践进行展开。</p> <p>接下来我们开始聊聊TypeScript 进阶的第一讲——类型守卫 。</p> <blockquote><p>学习建议：使用 VS Code 新建一个 11.ts 文件，并尝试这一讲中出现的所有示例。</p></blockquote> <h3 id="类型守卫"><a href="#类型守卫" class="header-anchor">#</a> 类型守卫</h3> <p>JavaScript 作为一种动态语言，意味着其中的参数、值可以是多态（多种类型）。因此，我们需要区别对待每一种状态，以此确保对参数、值的操作合法。</p> <p>举一个常见的场景为例，如下我们定义了一个可以接收字符串或者字符串数组的参数 toUpperCase，并将参数转成大写格式输出的函数 convertToUpperCase。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  const convertToUpperCase = (strOrArray) =&gt; {
+    if (typeof strOrArray === 'string') {
+      return strOrArray.toUpperCase();
+    } else if (Array.isArray(strOrArray)) {
+      return strOrArray.map(item =&gt; item.toUpperCase());
+    }
+  }
+}
+</code></pre></div><p>在示例中的第 3 行、第 5 行，我们分别使用了 typeof、Array.isArray 确保字符串和字符串数组类型的入参在运行时分别进入正确的分支，而不至于入参是数组类型时，调用数组类型并不存在的 toUpperCase 方法，从而抛出一个“strOrArray.toUpperCase is not a function”的错误。</p> <p>在 TypeScript 中，因为受静态类型检测约束，所以在编码阶段我们必须使用类似的手段确保当前的数据类型支持相应的操作。当然，前提条件是已经显式地注解了类型的多态。</p> <p>比如如果我们将上边示例中的 convertToUpperCase 函数使用 TypeScript 实现，那么就需要显示地标明 strOrArray 的类型就是 string 和 string[] 类型组成的联合类型，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  const convertToUpperCase = (strOrArray: string | string[]) =&gt; {
+    if (typeof strOrArray === 'string') {
+      return strOrArray.toUpperCase();
+    } else if (Array.isArray(strOrArray)) {
+      return strOrArray.map(item =&gt; item.toUpperCase());
+    }
+  }
+}
+</code></pre></div><p>在示例中，convertToUpperCase 函数的主体逻辑与 JavaScript 中的逻辑完全一致（除了添加的参数类型注解）。</p> <p>在 TypeScript 中，第 3 行和第 5 行的 typeof、Array.isArray 条件判断，除了可以保证转译为 JavaScript 运行后类型是正确的，还可以保证第 4 行和第 6 行在静态类型检测层面是正确的。</p> <p>很明显，第 4 行中入参 strOrArray 的类型因为 typeof 条件判断变成了 string，第 6 行入参 strOrArray 的类型因为 Array.isArray 变成了 string[]，所以没有提示类型错误。而这个类型变化就是 04 讲中学习的类型缩小，这里的 typeof、Array.isArray 条件判断就是类型守卫。</p> <p>从示例中，我们可以看到<strong>类型守卫的作用在于触发类型缩小。实际上，它还可以用来区分类型集合中的不同成员。</strong></p> <p>类型集合一般包括联合类型和枚举类型，下面我们看看如何区分联合类型。</p> <h3 id="如何区分联合类型"><a href="#如何区分联合类型" class="header-anchor">#</a> 如何区分联合类型？</h3> <p>首先，我们看一下如何使用类型守卫来区分联合类型的不同成员，常用的类型守卫包括<strong>switch、字面量恒等、typeof、instanceof、in 和自定义类型守卫</strong>这几种。</p> <h4 id="_1-switch"><a href="#_1-switch" class="header-anchor">#</a> 1. switch</h4> <p>我们往往会使用 switch 类型守卫来处理联合类型中成员或者成员属性可枚举的场景，即字面量值的集合，如以下示例：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  const convert = (c: 'a' | 1) =&gt; {
+    switch (c) {
+      case 1:
+        return c.toFixed(); // c is 1
+      case 'a':
+        return c.toLowerCase(); // c is 'a'
+    }
+  }
+  const feat = (c: { animal: 'panda'; name: 'China' } | { feat: 'video'; name: 'Japan' }) =&gt; {
+    switch (c.name) {
+      case 'China':
+        return c.animal; // c is &quot;{ animal: 'panda'; name: 'China' }&quot;
+      case 'Japan':
+        return c.feat; // c is &quot;{ feat: 'video'; name: 'Japan' }&quot;
+    }
+  };
+}
+</code></pre></div><p>在上述示例中，因为 convert 函数的参数及 feat 函数参数的 name 属性都是一个可被枚举的集合，所以我们可以使用 switch 来缩小类型。</p> <p>比如第 5 行中 c 的类型被缩小为数字 1，第 7 行的 c 被缩小为字符串 'Japan'，第 13 和 15 行的 c 也被缩小为相应的接口类型。因此，我们对参数 c 进行相关操作时，也就不会提示类型错误了。</p> <h4 id="_2-字面量恒等"><a href="#_2-字面量恒等" class="header-anchor">#</a> 2. 字面量恒等</h4> <p>switch 适用的场景往往也可以直接使用字面量恒等比较进行替换，比如前边的 convert 函数可以改造成以下示例：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>  const convert = (c: 'a' | 1) =&gt; {
+    if (c === 1) {
+      return c.toFixed(); // c is 1
+    } else if (c === 'a') {
+        return c.toLowerCase(); // c is 'a'
+    }
+  }
+</code></pre></div><p>在以上示例中，第 3 行、第 5 行的类型相应都缩小为了字面量 1 和 'a'。</p> <blockquote><p>建议：一般来说，如果可枚举的值和条件分支越多，那么使用 switch 就会让代码逻辑更简洁、更清晰；反之，则推荐使用字面量恒等进行判断。</p></blockquote> <h4 id="_3-typeof"><a href="#_3-typeof" class="header-anchor">#</a> 3. typeof</h4> <p>反过来，当联合类型的成员不可枚举，比如说是字符串、数字等原子类型组成的集合，这个时候就需要使用 typeof。</p> <p>typeof 是一个比较特殊的操作符（15 讲中会再详细地介绍它），我们可以使用它对 convert 函数进行改造，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>  const convert = (c: 'a' | 1) =&gt; {
+    if (typeof c === 'number') {
+      return c.toFixed(); // c is 1
+    } else if (typeof c === 'string') {
+        return c.toLowerCase(); // c is 'a'
+    }
+  }
+</code></pre></div><p>在上述示例中，因为 typeof c 表达式的返回值类型是字面量联合类型 'string' | 'number' | 'bigint' | 'boolean' | 'symbol' | 'undefined' | 'object' | 'function'，所以通过字面量恒等判断我们把在第 2 行和第 4 行的 typeof c 表达式值类型进行了缩小，进而将 c 的类型缩小为明确的 string、number 等原子类型。</p> <h4 id="_4-instanceof"><a href="#_4-instanceof" class="header-anchor">#</a> 4. instanceof</h4> <p>此外，联合类型的成员还可以是类。比如以下示例中的第 9 行和第 11 行，我们使用了 instanceof 来判断 param 是 Dog 还是 Cat 类。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  class Dog {
+    wang = 'wangwang';
+  }
+  class Cat {
+    miao = 'miaomiao';
+  }
+  const getName = (animal: Dog | Cat) =&gt; {
+    if (animal instanceof Dog) {
+      return animal.wang;
+    } else if (animal instanceof Cat) {
+      return animal.miao;
+    }
+  }
+}
+</code></pre></div><p>这里我们可以看到，第 10 行、第 12 行的 animal 的类型也缩小为 Dog、Cat 了。接下来我们看看更复杂的情况——in。</p> <h4 id="_5-in"><a href="#_5-in" class="header-anchor">#</a> 5. in</h4> <p>当联合类型的成员包含接口类型（对象），并且接口之间的属性不同，如下示例中的接口类型 Dog、Cat，我们不能直接通过“ . ”操作符获取 param 的 wang、miao 属性，从而区分它是 Dog 还是 Cat。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  interface Dog {
+    wang: string;
+  }
+  interface Cat {
+    miao: string;
+  }
+  const getName = (animal: Dog | Cat) =&gt; {
+    if (typeof animal.wang == 'string') { // ts(2339)
+      return animal.wang; // ts(2339)
+    } else if (animal.miao) { // ts(2339)
+      return animal.miao; // ts(2339)
+    }
+  }
+}
+</code></pre></div><p>这里我们看到，在第 9~12 行都提示了一个 ts(2339) Dog | Cat 联合类型没有 wang、miao 属性的错误。</p> <p>这个时候我们就需要使用 in 操作符来改造一下 getName 函数， 这样就不会提示类型错误了，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const getName = (animal: Dog | Cat) =&gt; {
+    if ('wang' in animal) { // ok
+      return animal.wang; // ok
+    } else if ('miao' in animal) { // ok
+      return animal.miao; // ok
+    }
+  }
+</code></pre></div><p>这里我们可以看到，第 3 行、第 4 行中的 animal 的类型也缩小成 Dog 和 Cat 了。</p> <p>最后我们要介绍的是自定义类型守卫，确切地讲是自定义函数，</p> <h4 id="_6-自定义类型守卫"><a href="#_6-自定义类型守卫" class="header-anchor">#</a> 6. 自定义类型守卫</h4> <p>这时我们将使用 05 讲中学习过的类型谓词 is，比如封装一个 isDog 函数来区分 Dog 和 Cat，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>  const isDog = function (animal: Dog | Cat): animal is Dog {
+    return 'wang' in animal;
+  }
+  const getName = (animal: Dog | Cat) =&gt; {
+    if (isDog(animal)) {
+      return animal.wang;
+    }
+  }
+</code></pre></div><p>这里我们在 getName 函数第 5 行的条件判断中使用了 isDog 将 animal 的类型缩小为 Dog，这样第 6 行就可以直接获取 wang 属性了，而不会提示一个 ts(2339) 的错误。</p> <p>除了联合类型之外，另外一个类型集合是枚举类型，下面我们聊聊如何区别枚举类型。</p> <h3 id="如何区别枚举类型"><a href="#如何区别枚举类型" class="header-anchor">#</a> 如何区别枚举类型？</h3> <p>如 09 讲中介绍，枚举类型是命名常量的集合，所以我们也需要使用类型守卫区分枚举类型的成员。</p> <p>先回想一下枚举类型的若干特性，因为这将决定使用哪几种类型守卫来区分枚举既是可行的，又是安全的。</p> <p><strong>特性 1</strong>：枚举和其他任何枚举、类型都不可比较，除了数字枚举可以与数字类型比较之外；</p> <p><strong>特性 2</strong>：数字枚举极其不稳定。</p> <p>熟悉了这些特性后，得出一个结论：最佳实践时，我们永远不要拿枚举和除了自身之外的任何枚举、类型进行比较。</p> <p>下面我们看一个具体的示例：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  enum A {
+    one,
+    two
+  }
+  enum B {
+    one,
+    two
+  }
+  const cpWithNumber = (param: A) =&gt; {
+    if (param === 1) { // bad
+      return param;
+    }
+  }
+  const cpWithOtherEnum = (param: A) =&gt; {
+    if (param === B.two as unknown as A) { // ALERT bad
+      return param;
+    }
+  }
+  const cpWithSelf = (param: A) =&gt; {
+    if (param === A.two) { // good
+      return param;
+    }
+  }
+}
+</code></pre></div><p>在第 10～14 行的函数 cpWithNumber 中，第 11 行我们将类型是枚举 A 的入参 param 和数字字面量 1 进行比较，因为 A 是数字枚举，所以 param 可以和 1 进行比较，而不会提示一个 ts(2367) 条件判断恒为 false 的错误。</p> <p>因为数字枚举不稳定，所以默认情况下 A.two 的值会是 1，因此第 11 行的条件判断在入参为 A.two 的时候为真。但是，如果我们给枚举 A 的成员 one 指定初始值 1，第 11 行的条件判断在入参为 A.two 的时候就为否了，因为 A.two 值变成了 2，所以这不是一个安全的实践。</p> <blockquote><p>顺带再复习一下，在调用函数 cpWithNumber 的时候，我们使用数字类型做入参也是一种不安全的实践，原因同上。</p></blockquote> <p>示例中第 15 ～ 19 行的函数 cpWithOtherEnum，我们使用了双重类型断言将枚举类型 B 转换为 A，主要是为了避免第 16 行提示一个 ts(2367) 错误，所以这同样也是一种不安全的实践。因为一旦 A 和 B 的结构出现了任何差异（比如给成员指定了不同的初始值、改变了成员的顺序或者个数），都会导致第 16 行的条件判断逻辑时真时否。</p> <blockquote><p>注意：有时候我们确实避免不了像示例中第 16 行这样使用双重类型断言来绕过 TypeScript 静态类型检测，比如使用基于同一个 Swagger 定义自动生成的两个枚举类型。此时，我们就需要极其谨慎，而且还需要添加警示信息进行说明，比如第 16 行添加的 &quot;ALERT&quot; 注释。</p></blockquote> <p>最安全的实践是使用第 21 行区分枚举成员的判断方式。</p> <p>以上结论，同样适用于使用其他类型守卫（例如 switch）来区分枚举成员的场景。</p> <blockquote><p>注意：你应该还记得字面量成员枚举可等价为字面量成员类型组成的联合类型，所以类型守卫可以让字面量成员枚举发生类型缩小。比如第 22 行中 param 的类型是 A.two，此时如果我们在 VS Code 中 hover 到 param 变量上，则会看到一个信息验证提示。</p></blockquote> <p>以上就是 TypeScript 中尽职尽责的类型守卫。</p> <p>不过，类型守卫实际上也会有力不足心的时候，下面我们一起看看失效的类型守卫。</p> <h3 id="失效的类型守卫"><a href="#失效的类型守卫" class="header-anchor">#</a> 失效的类型守卫</h3> <p>失效的类型守卫指的是某些类型守卫应用在泛型函数中时不能缩小类型，即失效了。比如我们改造了一个可以接受泛型入参的 getName 函数，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const getName = &lt;T extends Dog | Cat&gt;(animal: T) =&gt; {
+  if ('wang' in animal) {
+    return animal.wang; // ts(2339)
+  }
+  return animal.miao; // ts(2339)
+};
+</code></pre></div><p>在上述示例中，虽然我们在第 2 行使用了 in 类型守卫，但是它并没有让 animal 的类型如预期那样缩小为 Dog 的子类型，所以第 3 行的 T 类型上没有 wang 属性，从而提示一个 ts(2339) 的错误。所以第 5 行的 animal 也不会缩小为 Cat 的子类型，从而也会提示一个 ts(2339) 的错误。</p> <p>可一旦我们把 in 操作换成自定义类型守卫 isDog 或者使用 instanceOf，animal 的类型就会缩小成了 Dog 的子类型（T &amp; Dog），所以第 3 行不会提示 ts(2339) 的错误。由此可见，in 和 instanceOf、类型谓词在泛型类型缩小上是有区别的。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const getName = &lt;T extends Dog | Cat&gt;(animal: T) =&gt; {
+  if (isDog(animal)) { // instanceOf 亦可
+    return animal.wang; // ok
+  }
+  return animal.miao; // ts(2339)
+};
+</code></pre></div><p>但是，在缺省的 else 条件分支里，animal 的类型并没有缩小成 Cat 的子类型，所以第 5 行依旧会提示一个 ts(2339) 的错误（这是一个不太科学的设计，所幸在 TypeScript 4.3.2 里已经修改了）。</p> <p>这个时候，就需要使用类型断言，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const getName = &lt;T extends Dog | Cat&gt;(animal: T) =&gt; {
+  if (isDog(animal)) { // instanceOf 亦可
+    return animal.wang; // ok
+  }
+  return (animal as Cat).miao; // ts(2339)
+};
+</code></pre></div><p>在第 5 行，我们把 animal 的类型断言为 Cat，并获取了它的 miao 属性。</p> <h3 id="小结和预告"><a href="#小结和预告" class="header-anchor">#</a> 小结和预告</h3> <p>好了，以上就是这一讲的主要内容。</p> <p>可能你已经发现，所谓的高阶内容并不仅仅指新增了多少高难度的知识点，还包括对之前所学的知识的综合回顾。因为任何进阶的知识、技能都是建立在之前打下坚实的基础之上。</p> <p>插播一道思考题：如何区分不同的接口对象类型？欢迎你在留言区交流、互动？</p> <p>12 讲我们将学习类型的兼容性，了解如何判定一个类型能否赋值给其他类型，敬请期待~</p> <p>另外，如果你觉得本专栏有价值，欢迎分享给更多好友~</p></div></section> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/10.html" class="prev">
+            10
+          </a></span> <span class="next"><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/12.html">
+            12
+          </a></span></p></div> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:12rem;" data-v-cb1513f6><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/11.html#类型守卫" class="sidebar-link reco-side-类型守卫" data-v-cb1513f6>类型守卫</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/11.html#如何区分联合类型" class="sidebar-link reco-side-如何区分联合类型" data-v-cb1513f6>如何区分联合类型？</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/11.html#如何区别枚举类型" class="sidebar-link reco-side-如何区别枚举类型" data-v-cb1513f6>如何区别枚举类型？</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/11.html#失效的类型守卫" class="sidebar-link reco-side-失效的类型守卫" data-v-cb1513f6>失效的类型守卫</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/11.html#小结和预告" class="sidebar-link reco-side-小结和预告" data-v-cb1513f6>小结和预告</a></li></ul></main> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/my-blog/assets/js/app.343c5921.js" defer></script><script src="/my-blog/assets/js/3.0db1a3d9.js" defer></script><script src="/my-blog/assets/js/1.046e28ed.js" defer></script><script src="/my-blog/assets/js/36.e586bbf4.js" defer></script>
+  </body>
+</html>

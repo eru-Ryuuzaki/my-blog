@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>20 | 如何将 JavaScript 应用切换至 TypeScript？ | 个人笔记</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3a4f17ab81c4094e382bf19a13b55dc2";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <meta name="description" content="...">
+    
+    <link rel="preload" href="/my-blog/assets/css/0.styles.fcf3a78a.css" as="style"><link rel="preload" href="/my-blog/assets/js/app.343c5921.js" as="script"><link rel="preload" href="/my-blog/assets/js/3.0db1a3d9.js" as="script"><link rel="preload" href="/my-blog/assets/js/1.046e28ed.js" as="script"><link rel="preload" href="/my-blog/assets/js/45.70aecc63.js" as="script"><link rel="prefetch" href="/my-blog/assets/js/10.8b37840d.js"><link rel="prefetch" href="/my-blog/assets/js/11.afd542e7.js"><link rel="prefetch" href="/my-blog/assets/js/12.3fd3ec8b.js"><link rel="prefetch" href="/my-blog/assets/js/13.fe3845fb.js"><link rel="prefetch" href="/my-blog/assets/js/14.d80418e3.js"><link rel="prefetch" href="/my-blog/assets/js/15.21a4b058.js"><link rel="prefetch" href="/my-blog/assets/js/16.d9c3a3bd.js"><link rel="prefetch" href="/my-blog/assets/js/17.3e8647d3.js"><link rel="prefetch" href="/my-blog/assets/js/18.f97118b4.js"><link rel="prefetch" href="/my-blog/assets/js/19.76f4e914.js"><link rel="prefetch" href="/my-blog/assets/js/20.dca97e15.js"><link rel="prefetch" href="/my-blog/assets/js/21.8a423300.js"><link rel="prefetch" href="/my-blog/assets/js/22.7f9b8336.js"><link rel="prefetch" href="/my-blog/assets/js/23.385ee21c.js"><link rel="prefetch" href="/my-blog/assets/js/24.1291fe2c.js"><link rel="prefetch" href="/my-blog/assets/js/25.f119abc9.js"><link rel="prefetch" href="/my-blog/assets/js/26.33d4b763.js"><link rel="prefetch" href="/my-blog/assets/js/27.817a9de8.js"><link rel="prefetch" href="/my-blog/assets/js/28.9d1d643b.js"><link rel="prefetch" href="/my-blog/assets/js/29.c187f940.js"><link rel="prefetch" href="/my-blog/assets/js/30.814cbd44.js"><link rel="prefetch" href="/my-blog/assets/js/31.d0378bd7.js"><link rel="prefetch" href="/my-blog/assets/js/32.7f7bcd54.js"><link rel="prefetch" href="/my-blog/assets/js/33.dfee4021.js"><link rel="prefetch" href="/my-blog/assets/js/34.b29d3f6f.js"><link rel="prefetch" href="/my-blog/assets/js/35.8086ed34.js"><link rel="prefetch" href="/my-blog/assets/js/36.e586bbf4.js"><link rel="prefetch" href="/my-blog/assets/js/37.a951cdc5.js"><link rel="prefetch" href="/my-blog/assets/js/38.0a5a06ce.js"><link rel="prefetch" href="/my-blog/assets/js/39.7db6b61b.js"><link rel="prefetch" href="/my-blog/assets/js/4.e2d1b26b.js"><link rel="prefetch" href="/my-blog/assets/js/40.2ec5c12c.js"><link rel="prefetch" href="/my-blog/assets/js/41.7dde43c9.js"><link rel="prefetch" href="/my-blog/assets/js/42.a9cb98fb.js"><link rel="prefetch" href="/my-blog/assets/js/43.6f698f0e.js"><link rel="prefetch" href="/my-blog/assets/js/44.ea9ae46a.js"><link rel="prefetch" href="/my-blog/assets/js/46.f7b724af.js"><link rel="prefetch" href="/my-blog/assets/js/47.4ebc582c.js"><link rel="prefetch" href="/my-blog/assets/js/48.50259964.js"><link rel="prefetch" href="/my-blog/assets/js/49.e06abcc5.js"><link rel="prefetch" href="/my-blog/assets/js/5.72cd0049.js"><link rel="prefetch" href="/my-blog/assets/js/50.7eeb2bb5.js"><link rel="prefetch" href="/my-blog/assets/js/51.550b6ef5.js"><link rel="prefetch" href="/my-blog/assets/js/52.2e5a9e1d.js"><link rel="prefetch" href="/my-blog/assets/js/53.e2455bad.js"><link rel="prefetch" href="/my-blog/assets/js/54.50458c76.js"><link rel="prefetch" href="/my-blog/assets/js/55.22a63da0.js"><link rel="prefetch" href="/my-blog/assets/js/56.4574676f.js"><link rel="prefetch" href="/my-blog/assets/js/57.f33bfa96.js"><link rel="prefetch" href="/my-blog/assets/js/58.4fde6427.js"><link rel="prefetch" href="/my-blog/assets/js/59.e7c2752a.js"><link rel="prefetch" href="/my-blog/assets/js/6.4972be7e.js"><link rel="prefetch" href="/my-blog/assets/js/60.d6bd905d.js"><link rel="prefetch" href="/my-blog/assets/js/61.1cdfab6c.js"><link rel="prefetch" href="/my-blog/assets/js/62.3bf25be2.js"><link rel="prefetch" href="/my-blog/assets/js/63.f1691914.js"><link rel="prefetch" href="/my-blog/assets/js/64.346bd767.js"><link rel="prefetch" href="/my-blog/assets/js/65.761b4e3d.js"><link rel="prefetch" href="/my-blog/assets/js/66.ffc675f1.js"><link rel="prefetch" href="/my-blog/assets/js/67.1cb389b6.js"><link rel="prefetch" href="/my-blog/assets/js/68.9162fab0.js"><link rel="prefetch" href="/my-blog/assets/js/69.d0666bea.js"><link rel="prefetch" href="/my-blog/assets/js/7.09e621ab.js"><link rel="prefetch" href="/my-blog/assets/js/70.6a029ebb.js"><link rel="prefetch" href="/my-blog/assets/js/71.77354448.js"><link rel="prefetch" href="/my-blog/assets/js/72.4bf9f2c9.js"><link rel="prefetch" href="/my-blog/assets/js/73.f8406f8b.js"><link rel="prefetch" href="/my-blog/assets/js/74.f5138f16.js"><link rel="prefetch" href="/my-blog/assets/js/75.6885e049.js"><link rel="prefetch" href="/my-blog/assets/js/76.53d0d3bf.js"><link rel="prefetch" href="/my-blog/assets/js/77.c1cb6fa6.js"><link rel="prefetch" href="/my-blog/assets/js/8.0f8c4903.js"><link rel="prefetch" href="/my-blog/assets/js/9.f9bea8b5.js">
+    <link rel="stylesheet" href="/my-blog/assets/css/0.styles.fcf3a78a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-130b300a><div data-v-130b300a><div class="password-shadow password-wrapper-out" style="display:none;" data-v-25ba6db2 data-v-130b300a data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2>个人笔记</h3> <p class="description" data-v-25ba6db2 data-v-25ba6db2>...</p> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div class="hide" data-v-130b300a><header class="navbar" data-v-130b300a><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/my-blog/" class="home-link router-link-active"><!----> <span class="site-name">个人笔记</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-130b300a></div> <aside class="sidebar" data-v-130b300a><div class="personal-info-wrapper" data-v-39576ba9 data-v-130b300a><!----> <!----> <div class="num" data-v-39576ba9><div data-v-39576ba9><h3 data-v-39576ba9>56</h3> <h6 data-v-39576ba9>文章</h6></div> <div data-v-39576ba9><h3 data-v-39576ba9>0</h3> <h6 data-v-39576ba9>标签</h6></div></div> <ul class="social-links" data-v-39576ba9></ul> <hr data-v-39576ba9></div> <nav class="nav-links"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav> <ul class="sidebar-links"><li><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/" aria-current="page" class="sidebar-link">前言</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>HTML</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JavaScript</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>TS（已ok）</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/05.html" class="sidebar-link">05</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/06.html" class="sidebar-link">06</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/07.html" class="sidebar-link">07</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/08.html" class="sidebar-link">08</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/09.html" class="sidebar-link">09</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/10.html" class="sidebar-link">10</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/11.html" class="sidebar-link">11</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/12.html" class="sidebar-link">12</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/13.html" class="sidebar-link">13</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/14.html" class="sidebar-link">14</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/15.html" class="sidebar-link">15</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/16.html" class="sidebar-link">16</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/17.html" class="sidebar-link">17</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/18.html" class="sidebar-link">18</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/19.html" class="sidebar-link">19</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/20.html" class="active sidebar-link">20</a></li><li><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/结束语.html" class="sidebar-link">结束语</a></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端安全</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端工程化</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端框架</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>数据结构与算法</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>浏览器原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>计算机网络</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>面经</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-25ba6db2 data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2></h3> <!----> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div data-v-130b300a><main class="page"><section><div class="page-title"><h1 class="title">20 | 如何将 JavaScript 应用切换至 TypeScript？</h1> <div data-v-f875f3fc><!----> <!----> <!----> <!----></div></div> <div class="theme-reco-content content__default"><h1 id="_20-如何将-javascript-应用切换至-typescript"><a href="#_20-如何将-javascript-应用切换至-typescript" class="header-anchor">#</a> 20 | 如何将 JavaScript 应用切换至 TypeScript？</h1> <p>2021/07/08 乾元</p> <p>41.13M</p> <p>00:00/15:46</p> <p>看视频</p> <p>在前面几讲，我们学习了如何从零开始新建 TypeScript Node.js、Web 项目。</p> <p>然而，TypeScript 作为 JavaScript 的超集，花费了漫长的时间才替代了 JavaScript，并成长为构建应用的主流技术。比如我自己所负责的项目，最初也主要是基于 ES6（JavaScript） 源码构建的，甚至极个别项目是基于无须转译的 ES5（JavaScript） 代码构建的。</p> <p>从 JavaScript 进化到 TypeScript，也就意味着需要大量的迁移、重构操作。因此，接下来我们将学习将 JavaScript 技术栈项目迁移到 TypeScript 的操作步骤和实用技巧。</p> <h3 id="迁移步骤"><a href="#迁移步骤" class="header-anchor">#</a> 迁移步骤</h3> <h4 id="调整项目结构"><a href="#调整项目结构" class="header-anchor">#</a> 调整项目结构</h4> <p>首先，我们可以参照 18 讲和 19 讲的内容调整项目结构，比如使用 src 目录组织源码，typings 目录组织类型声明定义，lib 目录作为 Node.js 模块的构建产物，build 目录作为 Web 项目的构建产物。</p> <p>然后，我们需要在项目根目录下创建一个 tsconfig.json，让源码和单测共享一个配置文件。</p> <p>因为如今大多数的 JavaScript 项目都是基于 ES6+ 组织源码，再转译为 JavaScript，其项目结构基本可以划分为如下所示，所以我们只需要创建一个 tsconfig.json 即可。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>JavaScript2TypeScriptProject
+├── src
+│   ├── a.js
+│   └── b.js
+├── build 或则 lib
+├── typings
+├── package.json
+└── tsconfig.json
+</code></pre></div><p>接下来就是如何配置 tsconfig.json 了，下面我们一起探讨一下。</p> <h4 id="配置-tsconfig"><a href="#配置-tsconfig" class="header-anchor">#</a> 配置 tsconfig</h4> <p>在正式讲解之前，我们先插播一道思考题：Node.js 项目需要如何配置？</p> <blockquote><p>提示信息：区别仅在于 Node.js 项目需要指定 rootDir、outDir。</p></blockquote> <p>以配置 React Web 项目为例，为了尽可能少改动源码、让项目正常运行起来，我们不要一步到位开启严格模式，而应该尽量宽松地配置 tsconfig，如下配置所示。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;es5&quot;,
+    &quot;lib&quot;: [
+      &quot;dom&quot;,
+      &quot;dom.iterable&quot;,
+      &quot;esnext&quot;
+    ],
+    &quot;allowJs&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;allowSyntheticDefaultImports&quot;: true,
+    &quot;forceConsistentCasingInFileNames&quot;: true,
+    &quot;module&quot;: &quot;esnext&quot;,
+    &quot;moduleResolution&quot;: &quot;node&quot;,
+    &quot;resolveJsonModule&quot;: true,
+    &quot;isolatedModules&quot;: true,
+    &quot;noEmit&quot;: true,
+    &quot;jsx&quot;: &quot;react&quot;,
+    &quot;typeRoots&quot;: [&quot;node_modules/@types&quot;, &quot;./typings&quot;]
+  },
+  &quot;include&quot;: [ &quot;src&quot;, &quot;typings&quot; ]
+}
+</code></pre></div><p>其中，比较重要的配置项分为如下 5 个。</p> <ul><li>第 3 行配置“target”为 &quot;es5&quot;，用来将 TypeScript 转译为低版本、各端兼容性较好的 ES5 代码。</li> <li>第 9 行开启的 allowJs，它允许 JavaScript 和 TypeScript 混用，这使得我们可以分批次、逐模块地迁移代码。</li> <li>第 20 行我们把 typings 目录添加到类型查找路径，让 TypeScript 可以查找到自定义类型声明，比如为缺少类型声明的第三方模块补齐类型声明。</li> <li>第 22 行我们把 src 和 typings 目录添加到 TypeScript 需要识别的文件中（也可以按照实际需要添加其他目录或者文件，比如说独立的单测文件目录 <strong>tests</strong>）。</li> <li>因为是 React Web 项目，所以我们还需要在第 19 行将“jsx”配置为“react”。</li></ul> <blockquote><p>注意：因为 Web 项目中不会直接使用 tsc 转译 TypeScript，所以我们无需配置 rootDir、outDir，甚至可以开启 noEmit 配置（如上边配置第 18 行所示，开启该配置 tsc 不会生成转译产物）。</p></blockquote> <p>接下来，我们需要结合项目所使用的构建工具集成 TypeScript 构建环境。</p> <h4 id="构建工具集成-typescript"><a href="#构建工具集成-typescript" class="header-anchor">#</a> 构建工具集成 TypeScript</h4> <p>下面我们以非常常见的构建工具 Webpack 集成 TypeScript 为例。</p> <p>首先我们需要安装如下所示依赖，比如所有用到的第三模块类型声明（通过“npm i -D @types/模块名”进行安装）以及需要用来加载并转译 TypeScript 代码的 Webpack Loader。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>npm install -D typescript;
+npm install -D @types/react;
+npm install -D @types/react-dom;
+... // 其他必要依赖
+npm install -D ts-loader;
+</code></pre></div><p>然后，我们选择 ts-loader 作为 TypeScript 加载器，并在 webpack.config.js 配置文件中添加 resolve 和 module 规则，如下配置所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>module.exports = {
+  // 其他配置 ...,
+  resolve: {
+    extensions: [&quot;.ts&quot;, &quot;.tsx&quot;, &quot;.js&quot;, &quot;.jsx&quot;, &quot;.json&quot;],
+  },
+  module: {
+    rules: [
+      // 其他配置 loader 规则...,
+      {
+        test: /\.tsx?$/,
+        use: [
+          {
+            loader: &quot;ts-loader&quot;,
+            options: { transpileOnly: true }
+          }
+        ]
+      }
+    ],
+  },
+  plugins: [
+    // ...其他配置
+    new require('fork-ts-checker-webpack-plugin')({
+      async: false,
+      tsconfig: '...' // tsconfig.json 文件地址
+    });
+  ]
+  // 其他配置...
+};
+</code></pre></div><p>首先，我们在第 4 行的 extensions 配置中添加了 .ts、.tsx 文件后缀名，是为了让 Webpack 在解析模块的时候同时识别 TypeScript 文件。</p> <blockquote><p>注意：因为 Webpack 是以从左到右的顺序读取 extensions 配置并查找文件，所以按照如上配置，当碰到模块同名的情况，Webpack 将优先解析到 TypeScript 模块。</p></blockquote> <p>然后，我们在 17~19 行的 rules 配置中添加了 ts-loader，是为了让 Webpack 使用 ts-loader 加载和转译 .ts、.tsx 文件。</p> <blockquote><p>一个比较好的实践是，我们可以开启 ts-loader 的 transpileOnly 配置，让 ts-loader 在处理 TypeScript 文件时，只转译而不进行静态类型检测，这样就可以提升构建速度了。</p> <p>不过，这并不意味着构建时静态检测不重要，相反这是保证类型安全的最后一道防线。此时，我们可以通过其他性能更优的插件做静态类型检测。</p></blockquote> <p>最后，我们在第 22 行引入了 fork-ts-checker-webpack-plugin 专门对 TypeScript 文件进行构建时静态类型检测（可以通过如下命令，安装该插件）。这样，只要出现任何 TypeScript 类型错误，构建就会失败并提示错误信息。</p> <p>我们可以通过如下命令安装 fork-ts-checker-webpack-plugin 插件。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>npm install -D fork-ts-checker-webpack-plugin;
+</code></pre></div><p>实际上，静态类型检测确实会耗费性能和时间，尤其是项目特别庞大的时候，这个损耗会极大地降低开发体验。此时，我们可以根据实际情况优化 Webpack 配置，比如仅在生产构建时开启静态类型检测、开发构建时关闭静态类型检测，这样既可以保证开发体验，也能保证生产构建的安全性。</p> <p>除了使用 ts-loader 之外，现在我们也可以使用版本号大于 7 的 babel-loader 作为 TypeScript 的加载器。</p> <p>具体操作：首先，我们可以通过如下命令安装处理 TypeScript 的 babel preset。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>// npm i -D babel-loader; // 确保安装版本 &gt; 7
+npm i -D @babel/preset-typescript;
+</code></pre></div><blockquote><p><strong>注意：因为 React Web 项目必然已经安装了 babel-loader（必须依赖），所以我们不用重新安装 babel-loader，只需确保 babel-loader 的版本号大于 7 即可。</strong></p></blockquote> <p>然后，我们在 webpack.config.js 中添加支持 TypeScript 的配置，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>module.exports = {
+  // 其他配置 ...
+  resolve: 
+    extensions: [&quot;.ts&quot;, &quot;.tsx&quot;, &quot;.js&quot;, &quot;.jsx&quot;, &quot;.json&quot;]
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        use: ['babel-loader']
+      },
+      // ...其他配置
+    ]
+  },
+  // ...其他配置
+};
+</code></pre></div><p>在以上配置中的第 4 行、第 9 行，我们配置并使用了 babel-loader 来转换 .ts、.tsx 文件。</p> <p>最后，我们在 babel 配置文件中添加了如下所示的 typescript presets（参见第 5 行）。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>{
+   &quot;presets&quot;: [
+     &quot;@babel/preset-env&quot;,
+     &quot;@babel/preset-react&quot;,
+     ['@babel/preset-typescript', { allowNamespaces: true }]
+   ],
+   // ...其他配置
+}
+</code></pre></div><blockquote><p>注意：因为每个项目中使用的模板不同，所以 babel 配置项可能在 .babelrc、babel.config.js 单独的配置文件中或者内置在 package.json 中。</p></blockquote> <p>这样，babel-loader 就可以加载并转换 TypeScript 代码了。</p> <blockquote><p>需要注意：因为 babel-loader 也是只对 TypeScript 代码做转换，而不进行静态类型检测，所以我们同样需要引入 fork-ts-checker-webpack-plugin 插件做静态类型检测。</p></blockquote> <p>配置好构建工具后，接下来需要迁移 JavaScript 代码，我把这个过程形容为“愚公移山”。</p> <h4 id="愚公移山"><a href="#愚公移山" class="header-anchor">#</a> 愚公移山</h4> <p>为什么形容为“愚公移山”？因为将 JavaScript 迁移到 TypeScript 是一项个<strong>没有太大技术含量的体力活，同时也是一项长久、渐进的过程</strong>。</p> <p>迁移 JavaScript 代码的具体操作：首先，我们需要逐个将 .js 文件重名为 .ts、.jsx 文件重名为 .tsx，比如将项目的主入口文件 index.js 改成 index.ts（相应的 webpack.config.js 也需要更改）。然后，我们启动本地服务（npm start）。</p> <p>不出意外的话，IDE（比如我们推荐的 VS Code）和 fork-ts-checker-webpack-plugin 都会提示 index.ts 有 N 个各式各样的类型错误。</p> <p>如果我们希望前期始于一个比较高且好的起点，比如在 tsconfig.json 中配置 noImplicitAny 为 true（禁用隐式 any），这样就会提示更多的类型错误。</p> <blockquote><p>注意：作为过来人，建议你在 tsconfig.json 的配置上一步到位开启 strict 严格模式。一方面因为我们的课程是基于严格模式编写的，学以致用，另一方面是为了后续无需重复迁移过程，一步到位。当然，你也可以根据项目的实际诉求，选择开启严格模式一步到位或宽松配置 tsconfig。</p></blockquote> <h3 id="解决错误"><a href="#解决错误" class="header-anchor">#</a> 解决错误</h3> <p>接下来我们要做的事情就是综合利用前面课程的知识（例如 17 讲中介绍的较为常见的错误和分析），逐个解决迁移后的 TypeScript 文件中的各种类型错误。</p> <h4 id="缺少类型注解"><a href="#缺少类型注解" class="header-anchor">#</a> 缺少类型注解</h4> <p>我们看到的第一个错误大概率是缺少某个模块的类型声明文件 ts(7016)，比如说缺少路由组件 react-router-dom 的类型声明。</p> <p>此时，我们可以先通过以下命令尝试安装 DefinitelyTyped 上可能存在的类型声明依赖。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>npm i -D @types/react-router-dom;
+</code></pre></div><p>如果命令执行成功，则说明类型声明存在，并且安装成功，这也意味着我们快速且低成本地解决了一个错误。如果 DefinitelyTyped 上恰好没有定义好的依赖类型声明，那么我们就需要自己解决这个问题了。</p> <p>回想一下 18 讲中是如何解决依赖的 ecstatic 模块缺少类型声明问题的，首先我们需要频繁使用 declare module 补齐类型声明。然后，我们将各种补齐类型声明的文件统一放在 typings 目录中，比如示例 1 中自定义的 jQuery.d.ts（注意：DefinitelyTyped 有 jQuery 类型定义），示例 2 中声明的静态资源 svg、png、jpg、gif 文件模块的 images.d.ts。</p> <p>示例 1</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>// jQuery.d.ts
+declare module 'jQuery';
+</code></pre></div><p>示例 2</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>// images.d.ts
+declare module '*.svg';
+declare module '*.png';
+declare module '*.jpg';
+declare module '*.gif';
+</code></pre></div><p>关于全局变量、属性缺少类型定义的错误，我们也可以使用 declare 或者扩充相应的接口类型进行解决。</p> <p>首先我们可以创建一个 global.d.ts 补齐缺少的类型声明，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>declare var $: any;
+interface Window {
+  __REDUX_DEVTOOLS_EXTENSION__: any;
+}
+interface NodeModule {
+  hot?: {
+    accept: (id: string, callback: (...args: any) =&gt; void) =&gt; void;
+  };
+}
+</code></pre></div><p>在示例中的第 1 行，我们声明了全局变量 $，从而解决了找不到 $ 的 ts(2581) 错误。在第 2~4 行，我们扩充了 Window 接口，从而解决了访问 window.<strong>REDUX_DEVTOOLS_EXTENSION</strong> 时提示属性不存在的 ts(2339) 错误。然后在第 5 到第 9 行，我们扩充了 NodeModule 接口，从而解决了调用 module.hot.accept 方法时提示的 ts(2339) 错误。</p> <blockquote><p>注意：不要在 global.d.ts 内添加顶层的 import 或者 export 语句。</p> <p>插播一道思考题：回忆一下 TypeScript 中 script 和 module 的区别。</p></blockquote> <h4 id="隐式-any"><a href="#隐式-any" class="header-anchor">#</a> 隐式 any</h4> <p>接下来就是大量函数参数具有隐式 any 类型的 ts(7006) 错误，此时我们需要给所有函数添加类型注解。在解决这些错误时，如果我们结合 05 讲的知识（比如可选参数、剩余参数函数和函数重载）将会得心应手。</p> <blockquote><p>一个好的实践建议：如果我们确实需要暂时使用万金油类型 any 来绕过静态类型检测，则可以声明一个具有特殊含义的全局类型 AnyToFix 来代替 any。比如我们可以在 global.d.ts 内添加如下所示的 AnyToFix 类型别名定义。</p></blockquote> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>/** 需要替换成更明确的类型 */
+type AnyToFix = any;
+</code></pre></div><p>这样，我们就可以在任何地方使用 AnyToFix 替代 any ，比如下图中的 func 函数参数 arg 的类型就是 AnyToFix。并且在条件成熟时，我们可以很方便地筛选出需要类型重构的 func 函数，然后将其参数类型修改为更明确的类型。</p> <p><img src="https://s0.lgstatic.com/i/image6/M01/4A/53/CioPOWDe5jaAcn06AAE09h1BBNU745.png" alt="Drawing 0.png"></p> <h4 id="动态类型"><a href="#动态类型" class="header-anchor">#</a> 动态类型</h4> <p>另一类极有可能出现的错误是 JavaScript 动态类型特性造成的。</p> <p>如下示例第 1~3 行所示，我们习惯先定义一个空对象，再动态添加属性，迁移到 TypeScript 后就会提示一个对象上属性不存在的 ts(2339) 错误 。</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const obj = {};
+obj.id = 1; // ts(2339)
+obj.name = '乾元亨利贞'; // ts(2339)
+</code></pre></div><p>此时，我们需要通过重构代码解决这个问题，具体操作是预先定义完整的对象结构或类型断言。</p> <p>代码重构后的示例如下：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>interface IUserInfo {
+  id: number;
+  name: string;
+}
+const obj = {} as IUserInfo;
+obj.id = 1; // ok
+obj.name = '乾元亨利贞'; // ok
+</code></pre></div><p>在第 5 行中，我们使用了类型断言解决了 ts(2339) 错误。</p> <h4 id="有用的坏习惯"><a href="#有用的坏习惯" class="header-anchor">#</a> 有用的坏习惯</h4> <p>必要时，我们可以使用 // @ts-ignore 注释强制关闭下一行代码静态类型检测，但这绝对是一个坏习惯，示例如下：</p> <blockquote><p><strong>Tips：我们需要铭记所有绕过静态类型检测的方法都是魔鬼，尽量避免使用。</strong></p></blockquote> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>const objString = {
+  toString: () =&gt; '乾元亨利贞'
+}
+function getString(str: string) {
+  console.log(`${str}`);
+}
+// @ts-ignore
+getString(objString); // ts(2345)
+</code></pre></div><p>在示例中的第 7 行，因为我们使用了 // @ts-ignore 注释强行关闭第 8 行的静态类型检测，所以第 8 行并不会提示 ts(2345) 错误。</p> <p>另外，我们还可以使用 // @ts-nocheck 注释强制关闭整个文件静态类型检测。<strong>不过，我建议任何时候都不要使用这个注释。</strong></p> <p>另外一个有用的坏习惯是双重类型断言，即先把源类型值断言为 unknown，再把 unknown 断言为目标类型。比如上边使用 // @ts-ignore 注释的示例，我们也可以将它改造为双重类型断言，如下代码所示：</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>getString(objString as unknown as string); 
+</code></pre></div><p>这样也不会提示 ts(2345) 错误了。</p> <h4 id="自动迁移工具"><a href="#自动迁移工具" class="header-anchor">#</a> 自动迁移工具</h4> <p>如上边所提到，迁移过程是一项没有技术含量的体力活，因为其中存在很多重复、简单、有规律的操作，比如说将 JavaScript 文件修改为 TypeScript 文件、将模块引入方式从 ES5 require 改为 ES 6 import、将参数隐式 any 类型改为显式 any，这就意味着我们可以借助程序自动完成部分重复的迁移操作。</p> <p>比如我们可以使用 Airebnb 开源迁移工具<a href="https://github.com/airbnb/ts-migrate" target="_blank" rel="noopener noreferrer">ts-migrate<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>，快速地将 JavaScript 项目转换为基本可运行的 TypeScript 项目。因为该工具通过语法分析，可以快速推断出逻辑比较简单的函数/对象/类的类型。如下示例 1 中，JavaScript 函数 mult 经 ts-migrate 自动转换为 TypeScript 后，如下示例 2 中所示的参数 first、second 以及函数返回值类型都被明确为 number。</p> <p>示例 1</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function mult(first, second) {
+    return first * second;
+}
+</code></pre></div><p>示例 2</p> <p>复制代码</p> <div class="language- extra-class"><pre class="language-text"><code>function mult(first: number, second: number): number {
+    return first * second;
+}
+</code></pre></div><h3 id="小结和预告"><a href="#小结和预告" class="header-anchor">#</a> 小结和预告</h3> <p>以上就是JavaScript 应用迁移到 TypeScript 的全部内容，在实际迁移过程中，你需要综合利用前面所有课程的知识才能得心应手。课后建议你挑选一个中小型 JavaScript 项目尝试迁移。</p> <p>插播一道思考题：将 JavaScript 应用迁移到 TypeScript 的过程中，最常见的错误有哪些？都是如何解决的？</p> <p>下一讲是结束语，我们将一起回顾过往课程中涉及的一些重难知识点、实用技巧，以及概览 TypeScript 新版本中新增的若干重要特性，敬请期待。</p> <p>如果你觉得本专栏有价值，欢迎分享给更多好友~</p></div></section> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/19.html" class="prev">
+            19
+          </a></span> <span class="next"><a href="/my-blog/备战秋招/JavaScript/TS（已ok）/结束语.html">
+            结束语
+          </a></span></p></div> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:12rem;" data-v-cb1513f6><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/20.html#迁移步骤" class="sidebar-link reco-side-迁移步骤" data-v-cb1513f6>迁移步骤</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/20.html#解决错误" class="sidebar-link reco-side-解决错误" data-v-cb1513f6>解决错误</a></li><li class="level-3" data-v-cb1513f6><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/JavaScript/TS%EF%BC%88%E5%B7%B2ok%EF%BC%89/20.html#小结和预告" class="sidebar-link reco-side-小结和预告" data-v-cb1513f6>小结和预告</a></li></ul></main> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/my-blog/assets/js/app.343c5921.js" defer></script><script src="/my-blog/assets/js/3.0db1a3d9.js" defer></script><script src="/my-blog/assets/js/1.046e28ed.js" defer></script><script src="/my-blog/assets/js/45.70aecc63.js" defer></script>
+  </body>
+</html>
