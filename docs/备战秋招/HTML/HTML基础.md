@@ -14,6 +14,11 @@ Doctype 位于文档最前面，处于 html 标签之前，告诉浏览器文档
 - 过渡版本
 - 基于框架 html 版本
 
+> HTML4 规定了三种声明方式，分别是：**严格模式、过渡模式 和 框架集模式**；而 HTML5 因为不是SGML的子集，只需要<!DOCTYPE>就可以了：
+>
+> > 1. html 4.01基于SGML，需要声明DTD。
+> > 2. html5不基于SGML，所以不需要引用DTD。
+
 ### HTML5 的更新
 
 1. 语义化标签
@@ -110,6 +115,40 @@ Doctype 位于文档最前面，处于 html 标签之前，告诉浏览器文档
       hash 的缺点：
 
       - hash值前面需要加#, 不符合url规范,也不美观
+   
+7. 表单控件：HTML5 拥有多个新的表单输入类型。这些新特性提供了更好的输入控制和验证。
+
+   + color
+
+   + date
+
+   + datetime
+
+   + datetime-local
+
+   + email
+
+   + month
+
+   + number
+
+   + range
+
+   + search
+
+   + tel
+
+   + time
+
+   + url
+
+   + week
+
+8. 画布/Canvas，canvas，figure,figcaption.
+
+9. 地理/Geolocation**.地理位置 API 允许用户向 Web 应用程序提供他们的位置。出于隐私考虑，报告地理位置前会先请求用户许可。**
+
+10. 拖拽释放.HTML拖拽释放 (Drag and drop) 接口使应用程序能够在浏览器中使用拖放功能。例如，通过这些功能，用户可以使用鼠标选择可拖动元素，将元素拖动到可放置元素，并通过释放鼠标按钮来放置这些元素。可拖动元素的一个半透明表示在拖动操作期间跟随鼠标指针。
 
 ### src 和 href 的区别
 
