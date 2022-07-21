@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>175. 组合两个表 | 个人笔记</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3a4f17ab81c4094e382bf19a13b55dc2";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    <meta name="description" content="...">
+    
+    <link rel="preload" href="/my-blog/assets/css/0.styles.fcf3a78a.css" as="style"><link rel="preload" href="/my-blog/assets/js/app.8a9e1bf3.js" as="script"><link rel="preload" href="/my-blog/assets/js/3.0db1a3d9.js" as="script"><link rel="preload" href="/my-blog/assets/js/1.046e28ed.js" as="script"><link rel="preload" href="/my-blog/assets/js/35.e7977ca9.js" as="script"><link rel="prefetch" href="/my-blog/assets/js/10.539db36e.js"><link rel="prefetch" href="/my-blog/assets/js/11.900cf251.js"><link rel="prefetch" href="/my-blog/assets/js/12.3fd3ec8b.js"><link rel="prefetch" href="/my-blog/assets/js/13.bd328a0a.js"><link rel="prefetch" href="/my-blog/assets/js/14.20609b99.js"><link rel="prefetch" href="/my-blog/assets/js/15.21a4b058.js"><link rel="prefetch" href="/my-blog/assets/js/16.d9c3a3bd.js"><link rel="prefetch" href="/my-blog/assets/js/17.3e8647d3.js"><link rel="prefetch" href="/my-blog/assets/js/18.f97118b4.js"><link rel="prefetch" href="/my-blog/assets/js/19.76f4e914.js"><link rel="prefetch" href="/my-blog/assets/js/20.dca97e15.js"><link rel="prefetch" href="/my-blog/assets/js/21.8a423300.js"><link rel="prefetch" href="/my-blog/assets/js/22.7f9b8336.js"><link rel="prefetch" href="/my-blog/assets/js/23.385ee21c.js"><link rel="prefetch" href="/my-blog/assets/js/24.02f002f9.js"><link rel="prefetch" href="/my-blog/assets/js/25.f119abc9.js"><link rel="prefetch" href="/my-blog/assets/js/26.33d4b763.js"><link rel="prefetch" href="/my-blog/assets/js/27.75f3c01e.js"><link rel="prefetch" href="/my-blog/assets/js/28.9d1d643b.js"><link rel="prefetch" href="/my-blog/assets/js/29.c187f940.js"><link rel="prefetch" href="/my-blog/assets/js/30.6805ad73.js"><link rel="prefetch" href="/my-blog/assets/js/31.e9015ba3.js"><link rel="prefetch" href="/my-blog/assets/js/32.3b0d2268.js"><link rel="prefetch" href="/my-blog/assets/js/33.a34b4deb.js"><link rel="prefetch" href="/my-blog/assets/js/34.35a27e79.js"><link rel="prefetch" href="/my-blog/assets/js/36.242c7d04.js"><link rel="prefetch" href="/my-blog/assets/js/37.d4b1d7e7.js"><link rel="prefetch" href="/my-blog/assets/js/38.9106b8ee.js"><link rel="prefetch" href="/my-blog/assets/js/39.f2ffb92f.js"><link rel="prefetch" href="/my-blog/assets/js/4.e2d1b26b.js"><link rel="prefetch" href="/my-blog/assets/js/40.f8acc664.js"><link rel="prefetch" href="/my-blog/assets/js/41.582d7eec.js"><link rel="prefetch" href="/my-blog/assets/js/42.983b0db0.js"><link rel="prefetch" href="/my-blog/assets/js/43.cd5191a9.js"><link rel="prefetch" href="/my-blog/assets/js/44.e27fc906.js"><link rel="prefetch" href="/my-blog/assets/js/45.78bde7fc.js"><link rel="prefetch" href="/my-blog/assets/js/46.6f5efd53.js"><link rel="prefetch" href="/my-blog/assets/js/47.8c8cf9f1.js"><link rel="prefetch" href="/my-blog/assets/js/48.02035493.js"><link rel="prefetch" href="/my-blog/assets/js/49.2963a203.js"><link rel="prefetch" href="/my-blog/assets/js/5.72cd0049.js"><link rel="prefetch" href="/my-blog/assets/js/50.afa381eb.js"><link rel="prefetch" href="/my-blog/assets/js/51.06061c24.js"><link rel="prefetch" href="/my-blog/assets/js/52.5fad8e7a.js"><link rel="prefetch" href="/my-blog/assets/js/53.54264a13.js"><link rel="prefetch" href="/my-blog/assets/js/54.817ad9b8.js"><link rel="prefetch" href="/my-blog/assets/js/55.e7bd11d3.js"><link rel="prefetch" href="/my-blog/assets/js/56.11923119.js"><link rel="prefetch" href="/my-blog/assets/js/57.1516771f.js"><link rel="prefetch" href="/my-blog/assets/js/58.7aba553b.js"><link rel="prefetch" href="/my-blog/assets/js/59.86a5bc17.js"><link rel="prefetch" href="/my-blog/assets/js/6.4972be7e.js"><link rel="prefetch" href="/my-blog/assets/js/60.a08eadc4.js"><link rel="prefetch" href="/my-blog/assets/js/61.6c646b13.js"><link rel="prefetch" href="/my-blog/assets/js/62.97b5411f.js"><link rel="prefetch" href="/my-blog/assets/js/7.09e621ab.js"><link rel="prefetch" href="/my-blog/assets/js/8.0f8c4903.js"><link rel="prefetch" href="/my-blog/assets/js/9.f9bea8b5.js">
+    <link rel="stylesheet" href="/my-blog/assets/css/0.styles.fcf3a78a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-130b300a><div data-v-130b300a><div class="password-shadow password-wrapper-out" style="display:none;" data-v-25ba6db2 data-v-130b300a data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2>个人笔记</h3> <p class="description" data-v-25ba6db2 data-v-25ba6db2>...</p> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div class="hide" data-v-130b300a><header class="navbar" data-v-130b300a><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/my-blog/" class="home-link router-link-active"><!----> <span class="site-name">个人笔记</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-130b300a></div> <aside class="sidebar" data-v-130b300a><div class="personal-info-wrapper" data-v-39576ba9 data-v-130b300a><!----> <!----> <div class="num" data-v-39576ba9><div data-v-39576ba9><h3 data-v-39576ba9>45</h3> <h6 data-v-39576ba9>文章</h6></div> <div data-v-39576ba9><h3 data-v-39576ba9>0</h3> <h6 data-v-39576ba9>标签</h6></div></div> <ul class="social-links" data-v-39576ba9></ul> <hr data-v-39576ba9></div> <nav class="nav-links"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="undefined"></i>
+  首页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="undefined"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/eru-Ryuuzaki" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://leetcode-cn.com/u/camille_ferros/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="undefined"></i>
+  力扣
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div><div class="nav-item"><a href="/my-blog/备忘录/" class="nav-link"><i class="undefined"></i>
+  备忘录
+</a></div><div class="nav-item"><a href="/my-blog/备战秋招/" class="nav-link"><i class="undefined"></i>
+  备战秋招
+</a></div><div class="nav-item"><a href="/my-blog/生活记录/" class="nav-link"><i class="undefined"></i>
+  生活记录
+</a></div> <!----></nav> <ul class="sidebar-links"><li><a href="/my-blog/%E5%A4%87%E6%88%98%E7%A7%8B%E6%8B%9B/" aria-current="page" class="sidebar-link">前言</a></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>CSS</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>HTML</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>JavaScript</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端安全</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端工程化</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>前端框架</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>数据结构与算法</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>浏览器原理</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>计算机网络</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>面经</span> <span class="arrow right"></span></p> <!----></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-25ba6db2 data-v-130b300a><h3 class="title" data-v-25ba6db2 data-v-25ba6db2></h3> <!----> <label id="box" class="inputBox" data-v-25ba6db2 data-v-25ba6db2><input type="password" value="" data-v-25ba6db2> <span data-v-25ba6db2>Konck! Knock!</span> <button data-v-25ba6db2>OK</button></label> <div class="footer" data-v-25ba6db2 data-v-25ba6db2><span data-v-25ba6db2><i class="iconfont reco-theme" data-v-25ba6db2></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-25ba6db2>vuePress-theme-reco</a></span> <span data-v-25ba6db2><i class="iconfont reco-copyright" data-v-25ba6db2></i> <a data-v-25ba6db2><!---->
+            
+          <!---->
+          2022
+        </a></span></div></div> <div data-v-130b300a><main class="page" style="padding-right:0;"><section><div class="page-title"><h1 class="title">175. 组合两个表</h1> <div data-v-f875f3fc><!----> <!----> <!----> <!----></div></div> <div class="theme-reco-content content__default"><h4 id="_175-组合两个表"><a href="#_175-组合两个表" class="header-anchor">#</a> <a href="https://leetcode.cn/problems/combine-two-tables/" target="_blank" rel="noopener noreferrer">175. 组合两个表<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h4> <div class="language-mysql extra-class"><pre class="language-text"><code>SELECT firstName, lastName, city, state 
+FROM Person 
+LEFT JOIN Address
+ON Person.personId = Address.personId;
+</code></pre></div><ul><li><p>语法不够熟悉，一开始把<code>on</code>写成了<code>where</code>,第二次在<code>on</code>后面加了<code>where</code></p></li> <li><p>①A inner join B：取交集</p> <p>②A left join B：取A全部，B没有对应的值，则为null</p> <p>③A right join B：取B全部，A没有对应的值，则为null</p> <p>④A full outer join B：取并集，彼此没有对应的值为null</p></li> <li><p>对联表有了一点了解</p></li></ul> <h4 id="_176-第二高的薪水"><a href="#_176-第二高的薪水" class="header-anchor">#</a> <a href="https://leetcode.cn/problems/second-highest-salary/" target="_blank" rel="noopener noreferrer">176. 第二高的薪水<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h4> <p>不会写，直接看题解了</p> <div class="language-mysql extra-class"><pre class="language-text"><code>SELECT
+    IFNULL(
+      (SELECT DISTINCT Salary
+       FROM Employee
+       ORDER BY Salary DESC
+        LIMIT 1 OFFSET 1),
+    NULL) AS SecondHighestSalary
+</code></pre></div><ul><li><p><code>mysql</code>中<code>isnull</code>,<code>ifnull</code>,<code>nullif</code>的用法如下：</p> <p><code>isnull(expr)</code> 的用法： 如<code>expr</code> 为<code>null</code>，那么<code>isnull()</code> 的返回值为 <code>1</code>，否则返回值为 <code>0</code>。</p> <div class="language-mysql extra-class"><pre class="language-text"><code>mysql&gt; select isnull(1+1); -&gt; 0 
+mysql&gt; select isnull(1/0); -&gt; 1 
+</code></pre></div><p>使用 = 的null 值对比通常是错误的。</p> <p><code>isnull()</code> 函数同<code>is null</code>比较操作符具有一些相同的特性。请参见有关is null 的说明。</p> <p><code>IFNULL(expr1,expr2)</code>的用法：</p> <p>假如expr1 不为 NULL，则 IFNULL() 的返回值为 expr1; 否则其返回值为 expr2。IFNULL()的返回值是数字或是字符串，具体情况取决于其所使用的语境。</p> <div class="language-mysql extra-class"><pre class="language-text"><code>mysql&gt; SELECT IFNULL(1,0);
+-&gt; 1
+mysql&gt; SELECT IFNULL(NULL,10);
+-&gt; 10
+mysql&gt; SELECT IFNULL(1/0,10);
+-&gt; 10
+mysql&gt; SELECT IFNULL(1/0,'yes');
+&gt; &quot;yes&quot;
+</code></pre></div></li> <li><p>1、当 limit后面跟一个参数的时候，该参数表示要取的数据的数量</p> <p>例如 select* from user limit 3 表示直接取前三条数据</p> <p>2、当limit后面跟两个参数的时候，第一个数表示要跳过的数量，后一位表示要取的数量,例如</p> <p>select * from user limit 1,3;</p> <p>就是跳过1条数据,从第2条数据开始取，取3条数据，也就是取2,3,4三条数据</p> <p>3、当 limit和offset组合使用的时候，limit后面只能有一个参数，表示要取的的数量,offset表示要跳过的数量 。</p> <p>例如select * from user limit 3 offset 1;表示跳过1条数据,从第2条数据开始取，取3条数据，也就是取2,3,4三条数据</p></li></ul> <h4 id="_177-第n高的薪水"><a href="#_177-第n高的薪水" class="header-anchor">#</a> <a href="https://leetcode.cn/problems/nth-highest-salary/" target="_blank" rel="noopener noreferrer">177. 第N高的薪水<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h4> <p>第一眼看上去和上一题好像，原本以为改一下就行了，结果是个函数的形式，第一次接触，不知道怎么写，卒</p> <p>一开始写的代码</p> <div class="language-mysql extra-class"><pre class="language-text"><code>CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+  RETURN (
+    # Write your MySQL query statement below.
+    SELECT
+        IFNULL(
+        (SELECT DISTINCT Salary
+        FROM Employee
+        ORDER BY Salary DESC
+            LIMIT 1 OFFSET N - 1),
+        NULL) AS getNthHighestSalary(N)
+    );
+END
+</code></pre></div><p>毫不意外地报错了</p> <blockquote><p>You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '- 1),
+NULL) AS getNthHighestSalary(N)
+);
+END' at line 10</p></blockquote> <p>看了一下评论区，好像很多人写了好多年 sql 都没写过 sql 的函数，那就当做课外知识稍微了解一下吧</p> <p>正解</p> <div class="language-mysql extra-class"><pre class="language-text"><code>CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+    SET N := N-1;
+  RETURN (
+      # Write your MySQL query statement below.
+      SELECT 
+            salary
+      FROM 
+            employee
+      GROUP BY 
+            salary
+      ORDER BY 
+            salary DESC
+      LIMIT N, 1
+  );
+END
+</code></pre></div><ul><li><p>这里不能直接用limit N-1是因为limit和offset字段后面只接受正整数（意味着0、负数、小数都不行）或者单一变量（意味着不能用表达式），也就是说想取一条，limit 2-1、limit 1.1这类的写法都是报错的。所以要想用<code>limit</code>的话，要先用 <code>set</code> 改变<code>n</code> 的值</p></li> <li><p>一开始觉得<code>SET N := N-1;</code> 这种写法不太好，想把<code>n-1</code>赋值给一个新变量的，结果</p> <blockquote><p>Unknown system variable 'M'</p></blockquote> <p>正确做法是要先</p> <div class="language-mysql extra-class"><pre class="language-text"><code>DECLARE m INT;
+</code></pre></div></li></ul> <h4 id="_178-分数排名"><a href="#_178-分数排名" class="header-anchor">#</a> <a href="https://leetcode.cn/problems/rank-scores/" target="_blank" rel="noopener noreferrer">178. 分数排名<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h4> <p>看完题目，不知道加入新字段和获取排名的语法怎么写。害，边写边学吧</p> <div class="language-mysql extra-class"><pre class="language-text"><code>select a.Score as Score,
+# 每个人都计算排在他前面的不同的分数有多少个，这种时间复杂度也能接受吗？
+(select count(distinct b.Score) from Scores b where b.Score &gt;= a.Score) as Rank
+from Scores a
+order by a.Score DESC
+</code></pre></div><ul><li>加深了对联表操作的了解</li></ul> <h4 id="_180-连续出现的数字"><a href="#_180-连续出现的数字" class="header-anchor">#</a> <a href="https://leetcode.cn/problems/consecutive-numbers/" target="_blank" rel="noopener noreferrer">180. 连续出现的数字<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h4> <p>害，想自己做出一道题，还是需要好好加油啊</p> <p>没思路，抄！</p> <div class="language-mysql extra-class"><pre class="language-text"><code>SELECT *
+FROM
+    Logs l1,
+    Logs l2,
+    Logs l3
+WHERE
+    l1.Id = l2.Id - 1
+    AND l2.Id = l3.Id - 1
+    AND l1.Num = l2.Num
+    AND l2.Num = l3.Num
+;
+</code></pre></div><p>评论区一位老哥的评论和符合我现在的感觉：</p> <blockquote><p>每次都是看到答案就明白，自己就是想不到 。。。。。。</p></blockquote> <ul><li>可以通过多个表来筛选</li></ul> <h4 id="_181-超过经理收入的员工"><a href="#_181-超过经理收入的员工" class="header-anchor">#</a> <a href="https://leetcode.cn/problems/employees-earning-more-than-their-managers/" target="_blank" rel="noopener noreferrer">181. 超过经理收入的员工<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></h4> <p>芜湖，这是第一次靠自己写出来的诶（虽然是简单题~）</p> <div class="language-mysql extra-class"><pre class="language-text"><code>SELECT e1.name as Employee FROM 
+Employee e1, Employee e2
+WHERE e1.managerId = e2.id AND e1.salary &gt; e2.salary;
+</code></pre></div></div></section> <footer class="page-edit"><!----> <!----></footer> <!----> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:0;" data-v-cb1513f6></ul></main> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/my-blog/assets/js/app.8a9e1bf3.js" defer></script><script src="/my-blog/assets/js/3.0db1a3d9.js" defer></script><script src="/my-blog/assets/js/1.046e28ed.js" defer></script><script src="/my-blog/assets/js/35.e7977ca9.js" defer></script>
+  </body>
+</html>
