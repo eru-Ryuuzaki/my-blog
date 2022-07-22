@@ -148,7 +148,7 @@ END
 ```mysql
 select a.Score as Score,
 # 每个人都计算排在他前面的不同的分数有多少个，这种时间复杂度也能接受吗？
-(select count(distinct b.Score) from Scores b where b.Score >= a.Score) as Rank
+(select count(distinct b.Score) from Scores b where b.Score >= a.Score) as "Rank"
 from Scores a
 order by a.Score DESC
 ```
@@ -162,7 +162,7 @@ order by a.Score DESC
 没思路，抄！
 
 ```mysql
-SELECT *
+SELECT DISTINCT l1.Num ConsecutiveNums 
 FROM
     Logs l1,
     Logs l2,
@@ -171,8 +171,7 @@ WHERE
     l1.Id = l2.Id - 1
     AND l2.Id = l3.Id - 1
     AND l1.Num = l2.Num
-    AND l2.Num = l3.Num
-;
+    AND l2.Num = l3.Num;
 ```
 
 评论区一位老哥的评论和符合我现在的感觉：
@@ -191,3 +190,177 @@ Employee e1, Employee e2
 WHERE e1.managerId = e2.id AND e1.salary > e2.salary;
 ```
 
+#### [182. 查找重复的电子邮箱](https://leetcode.cn/problems/duplicate-emails/)
+
+一开始写法：
+
+```mysql
+SELECT DISTINCT Email from Person
+WHERE COUNT(Person.Email) > 1;
+```
+
+报错了
+
+> Invalid use of group function
+
+第二次尝试：
+
+```mysql
+SELECT Person.Email from Person
+HAVING COUNT(Person.Email) > 1;
+```
+
+这次是 wa 了
+
+>{"headers": {"Person": ["id", "email"]}, "rows": {"Person": [[1, "paris@hilton.com"], [2, "mickey@disney.com"]]}}
+>
+>实际输出：{"headers": ["Email"], "values": [["paris@hilton.com"]]}
+>
+>预期输出：{"headers": ["Email"], "values": []}
+
+看答案：(似懂非懂，也就是我上面少加了 group by Email)
+
+```mysql
+select Email
+from Person
+group by Email
+having count(Email) > 1;
+```
+
+另外一种写法：
+
+```mysql
+select Email from
+(
+  select Email, count(Email) as num
+  from Person
+  group by Email
+) as statistic
+where num > 1
+;
+```
+
++ SUM是对符合条件的记录的数值列求和
+
+  COUNT 是对查询中符合条件的结果(或记录)的个数
+
+#### [183. 从不订购的客户](https://leetcode.cn/problems/customers-who-never-order/)
+
+一开始的写法
+
+```mysql
+SELECT Customers.Name Customers FROM Customers
+LEFT JOIN Orders
+ON Customers.Id = Orders.CustomerId
+WHERE ISNULL(Customers.CustomerId);
+```
+
+又报错咯
+
+> Unknown column 'Customers.CustomerId' in 'where clause'
+
+还以为 left join 之后 Customers 就有了这个列，然而并不是这样，正确的写法：
+
+```mysql
+SELECT Customers.Name Customers FROM Customers
+LEFT JOIN Orders
+ON Customers.Id = Orders.CustomerId
+WHERE ISNULL(Orders.CustomerId);
+```
+
+再慢慢理解吧~
+
+另一个正解
+
+```mysql
+select customers.name as 'Customers'
+from customers
+where customers.id not in
+(
+    select customerid from orders
+);
+```
+
++ 也算是学到了 not in
+
+
+
+#### [184. 部门工资最高的员工](https://leetcode.cn/problems/department-highest-salary/)
+
+下来这个是乱写的，我都不知道自己为什么这样写
+
+```mysql
+SELECT Department, Employee, Salary FROM (
+    SELECT * FROM Employee e1
+    LEFT JOIN  Department d1
+    ON e1.DepartmentId = d1.id
+    GROUP BY d1.id
+    ORDER BY salary DESC
+    LIMIT 1
+) as t1;
+```
+
+是的，老样子。报错了
+
+> Duplicate column name 'id'
+
+正解
+
+```mysql
+SELECT
+    Department.name AS 'Department',
+    Employee.name AS 'Employee',
+    Salary
+FROM
+    Employee
+        JOIN
+    Department ON Employee.DepartmentId = Department.Id
+WHERE
+    (Employee.DepartmentId , Salary) IN
+    (   SELECT
+            DepartmentId, MAX(Salary)
+        FROM
+            Employee
+        GROUP BY DepartmentId
+	)
+;
+```
+
++ 可以两个字段 IN
++ MAX()
+
+#### [185. 部门工资前三高的所有员工](https://leetcode.cn/problems/department-top-three-salaries/)
+
+hard，直接 cv，先看懂再说
+
+```mysql
+SELECT
+    d.Name AS 'Department', e1.Name AS 'Employee', e1.Salary
+FROM
+    Employee e1
+        JOIN
+    Department d ON e1.DepartmentId = d.Id
+WHERE
+    3 > (SELECT
+            COUNT(DISTINCT e2.Salary)
+        FROM
+            Employee e2
+        WHERE
+            e2.Salary > e1.Salary
+                AND e1.DepartmentId = e2.DepartmentId
+        )
+;
+```
+
+
+
+#### [196. 删除重复的电子邮箱](https://leetcode.cn/problems/delete-duplicate-emails/)
+
+```mysql
+DELETE p1 FROM Person p1,
+    Person p2
+WHERE
+    p1.Email = p2.Email AND p1.Id > p2.Id
+```
+
+挺妙的，就是没想到
