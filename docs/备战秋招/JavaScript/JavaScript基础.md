@@ -27,6 +27,18 @@ highlight: a11y-light
 
 #### 概念
 
+闭包是指有权访问另外一个函数作用域中的变量的函数
+
+> 本质：当前环境中存在指向父级作用域的引用
+
+JavaScript代码的整个执行过程，分为两个阶段，代码编译阶段与代码执行阶段。编译阶段由编译器完
+
+成，将代码翻译成可执行代码，这个阶段作用域规则会确定。执行阶段由引擎完成，主要任务是执行可
+
+执行代码，执行上下文在这个阶段创建。
+
+![](https://raw.githubusercontent.com/eru-Ryuuzaki/myPic/master/img/20220808221006.png)
+
 使用闭包主要是为了设计私有的方法和变量。闭包的优点是可以避免全局变量的污染，缺点是闭包会常
 驻内存，会增大内存使用量，使用不当很容易造成内存泄露。在js中，函数即闭包，只有函数才会产生
 作用域的概念。
@@ -40,7 +52,7 @@ highlight: a11y-light
 #### 使用场景
 + 函数 curry 化
 
-
++ 模块
 
 ### js 垃圾回收机制
 
@@ -87,6 +99,55 @@ highlight: a11y-light
   + 当这个值的引用次数变为 0 的时候，说明没有变量在使用，这个值没法被访问了，回收空间，垃圾回收器会在运行的时候清理掉引用次数为 0 的值占用的内存
 
   > 我靠。。。。那篇文章讲的太细太好了，先继续学吧，等消化了在自己总结
+
+### 作用域
+
+随着ECMAScript标准的不断发展和完善，JavaScript目前存在着四种作用域类型：
+
+- 全局作用域（Global Scope）: JavaScript语言环境的最顶级作用域，在语言环境初始化时创建。
+- 模块作用域（Module Scope）: 由ECMAScript模块标准（ES Module）引入，在解析ECMAScript模块时创建。
+- 函数作用域（Function Scope）: 在函数声明`function() {}`或者`() => {}`时创建。
+- 块级作用域（Block Scope）: 由ECMAScript2015的变量声明标识符`let`和`const`引入，在使用这两者进行变量声明时，根据最近的一对花括号`{}`创建。
+
+```js
+/* 全局作用域 start，JavaScript语言环境初始化时就被创建 */
+/* 模块作用域 start，作为ES Module解析和执行时被创建 */
+let name = 'Wu';
+
+{
+  /* 块级作用域 start，const进行变量声明在最近的花括号{}内创建 */
+  const prefix = Hardy;
+  name = prefix + name;
+  /* 块级作用域 end */
+}
+
+export function sayMyName(myName) {
+  /* 函数作用域 start，函数声明时自动创建，初始化默认包含函数的形参变量 */
+  if (!myName) {
+    /* 块级作用域 start */
+    const noNameAnswer = 'Sorry!';
+    console.log(noNameAnswer);
+    return;
+    /* 块级作用域 end */
+  }
+  const wordPrifix = 'Hi! My Name is ';
+  const answer = wordPrifix + myName + '.';
+  console.log(answer);
+  /* 函数作用域 end */
+}
+/* 模块作用域 end */
+/* 全局作用域 end */
+```
+
+### 作用域链
+
+首先要了解作用域链，当访问一个变量时，编译器在执行这段代码时，会首先从当前的作用域中查找是
+
+否有这个标识符，如果没有找到，就会去父作用域查找，如果父作用域还没找到继续向上查找，直到全
+
+局作用域为止,，而作用域链，就是有当前作用域与上层作用域的一系列变量对象组成，它保证了当前执
+
+行的作用域对符合访问权限的变量和函数的有序访问。
 
 ### 函数声明和函数表达式
 
@@ -243,6 +304,7 @@ highlight: a11y-light
     arr.reduce(callback(accumulator, currentValue[,index[,array]])[, initialValue]);
 
  
+
 
 
 
