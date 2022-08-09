@@ -14,26 +14,26 @@
   2
   4
   3 ×
-```
   promise.then 是微任务，它会在所有的宏任务执行完之后才会执行，同时需要promise内部的状态发生变化，因为这里内部没有发生变化，一直处于pending状态，**所以不输出3**。
+  ```
 + ```js
-  const promise1 = new Promise((resolve, reject) => {
-    console.log('promise1')
-    resolve('resolve1')
-  })
-  const promise2 = promise1.then(res => {
-    console.log(res)
-  })
-  console.log('1', promise1);
-  console.log('2', promise2);
-  // 输出
-  promise1
-  1 pending ×	1 Promise{<resolved>: resolve1}
-  2 pending ×	2 Promise{<pending>}
-  resolve1 
-  /*
-  需要注意的是，直接打印 promise，会打印出它的状态值和参数。
-  */
+    const promise1 = new Promise((resolve, reject) => {
+      console.log('promise1')
+      resolve('resolve1')
+    })
+    const promise2 = promise1.then(res => {
+      console.log(res)
+    })
+    console.log('1', promise1);
+    console.log('2', promise2);
+    // 输出
+    promise1
+    1 pending ×	1 Promise{<resolved>: resolve1}
+    2 pending ×	2 Promise{<pending>}
+    resolve1 
+    /*
+    需要注意的是，直接打印 promise，会打印出它的状态值和参数。
+    */
   ```
 
 + ```js
@@ -487,8 +487,16 @@ async2
       console.log(arg);
   });
   console.log(4);
+  // print
+3
+  7
+  4
+  1
+  2
+  5
+  Promise{<resolved>: 1}
   ```
-
+  
 + ```js
   const async1 = async () => {
     console.log('async1');
@@ -512,8 +520,16 @@ async2
   setTimeout(() => {
     console.log('timer2')
   }, 1000)
+  // print
+script start
+  async1
+  promise1
+  script end
+  1
+  timer2
+  timer1
   ```
-
+  
 + ```js
   const p1 = new Promise((resolve) => {
     setTimeout(() => {
@@ -523,15 +539,20 @@ async2
     resolve('resovle1');
     resolve('resolve2');
   }).then(res => {
-    console.log(res)  // resolve1
+    console.log(res)  
     setTimeout(() => {
       console.log(p1)
     }, 1000)
   }).finally(res => {
     console.log('finally', res)
   })
+  // print
+resovle1
+  finally undefined
+  timer1
+  Promise{<resolved>:undefined}
   ```
-
+  
 + ```js
   console.log('1');
   
@@ -569,8 +590,21 @@ async2
           console.log('12')
       })
   })
+  // print
+1
+  7
+  6
+  8
+  2
+  4
+  3
+  5
+  9
+  11
+  10
+  12
   ```
-
+  
 + ```js
   console.log(1)
   
@@ -595,8 +629,17 @@ async2
   })
   
   console.log(8)
+  // print
+1
+  3
+  8
+  4
+  2
+  5
+  6
+  7
   ```
-
+  
 + ```js
   console.log(1);
       
@@ -619,8 +662,16 @@ async2
   })
   
   console.log(7);
+  // print
+1
+  4
+  7
+  5
+  2
+  3
+  6
   ```
-
+  
 + ```js
   Promise.resolve().then(() => {
       console.log('1');
@@ -637,8 +688,13 @@ async2
   }).then(() => {
       console.log('6');
   });
+  // print
+1
+  3
+  5
+  6
   ```
-
+  
 + ```js
   setTimeout(function () {
     console.log(1);
@@ -659,5 +715,298 @@ async2
   });
   console.log(7);
   console.log(8);
+  // print
+  2
+  3
+  7
+  8
+  4
+  5
+  6
+  1
   ```
+
+## 二、this
+
++ ```js
+  function foo() {
+    console.log( this.a );	
+  }
+  
+  function doFoo() {
+    foo();
+  }
+  
+  var obj = {
+    a: 1,
+    doFoo: doFoo
+  };
+  
+  var a = 2; 
+  obj.doFoo()	// 2
+  ```
+
++ ```js
+  var a = 10
+  var obj = {
+    a: 20,
+    say: () => {
+      console.log(this.a)
+    }
+  }
+  obj.say() // 20 ×
+  
+  var anotherObj = { a: 30 } 
+  obj.say.apply(anotherObj) // 20	×
+  // 正确输出
+  10
+  10
+  需要注意的是，say(箭头函数)的this来自原其父级所处的上下文
+  这个上下文不是对象！！！
+  这个上下文不是对象！！！
+  这个上下文不是对象！！！
+  所以不是指向 obj 而是指向全局作用域
+  ```
+
++ ```js
+  var a = 10  
+  var obj = {  
+    a: 20,  
+    say(){
+      console.log(this.a)  
+    }  
+  }  
+  obj.say()   // 20
+  var anotherObj={a:30}   
+  obj.say.apply(anotherObj)	//30
+  ```
+
++ ```js
+  function a() {
+    console.log(this);
+  }
+  a.call(null);
+  // 不咋会
+  // 正确输出
+  window对象
+  // 笔记
+  根据ECMAScript262规范规定：如果第一个参数传入的对象调用者是null或者undefined，call方法将把全局对象（浏览器上是window对象）作为this的值。所以，不管传入null 还是 undefined，其this都是全局对象window。
+  ```
+
++ ```js
+  'use strict';
+  
+  function a() {
+      console.log(this);
+  }
+  a.call(null); // null
+  a.call(undefined); // undefined
+  // 笔记
+  要注意的是，在严格模式中，null 就是 null，undefined 就是 undefined
+  ```
+
++ ```js
+  var obj = { 
+    name: 'cuggz', 
+    fun: function(){ 
+       console.log(this.name); 
+    } 
+  } 
+  obj.fun()     // cuggz
+  new obj.fun() // undefined
+  ```
+
++ ```js
+  var obj = {
+     say: function() {
+       var f1 = () =>  {
+         console.log("1111", this);
+       }
+       f1();
+     },
+     pro: {
+       getPro:() =>  {
+          console.log(this);
+       }
+     }
+  }
+  var o = obj.say;
+  o();
+  obj.say();
+  obj.pro.getPro();
+  // 1111 window
+  // 1111 obj
+  // window
+  ```
+
++ ```js
+  var myObject = {
+      foo: "bar",
+      func: function() {
+          var self = this;
+          console.log(this.foo);  // bar
+          console.log(self.foo);  // bar
+          // 这个立即执行匿名函数表达式是由window调用的
+          (function() {
+              console.log(this.foo);  // undefined
+              console.log(self.foo);  // bar
+          }());
+      }
+  };
+  myObject.func(); 
+  ```
+
++ ```js
+  window.number = 2;
+  var obj = {
+   number: 3,
+   db1: (function(){
+     console.log(this);
+     this.number *= 4;
+     return function(){
+       console.log(this);
+       this.number *= 5;
+     }
+   })()
+  }
+  var db1 = obj.db1;
+  db1();	// window
+  obj.db1();	// obj 
+  console.log(obj.number);     // 15
+  console.log(window.number);  // 8 错 => 40 看解析
+  // 解析
+  变量obj中db1是一个匿名函数, 在obj声明时db1就已经执行, 此时是系统自执行, this指向window, 不是db1()执行后才执行匿名函数
+  所以 window.number 还执行了一次 *5 的操作的
+  ```
+
++ ```js
+  var length = 10;
+  function fn() {
+      console.log(this.length);
+  }
+   
+  var obj = {
+    length: 5,
+    method: function(fn) {
+      fn();	// 10
+      arguments[0]();	// 这个我不会啊
+    }
+  };
+   
+  obj.method(fn, 1);
+  // 解析
+  第二次执行arguments[0]()，相当于arguments调用方法，this指向arguments，而这里传了两个参数，故输出arguments长度为2。
+  ```
+
++ ```js
+  var a = 1;
+  function printA(){
+    console.log(this.a);
+  }
+  var obj={
+    a:2,
+    foo:printA,
+    bar:function(){
+      printA();
+    }
+  }
+  
+  obj.foo(); // 2
+  obj.bar(); // 1
+  var foo = obj.foo;
+  foo(); // 1
+  ```
+
++ ```js
+  var x = 3;
+  var y = 4;
+  var obj = {
+      x: 1,
+      y: 6,
+      getX: function() {
+          var x = 5;
+          return function() {
+              return this.x;
+          }();
+      },
+      getY: function() {
+          var y = 7;
+          return this.y;
+      }
+  }
+  console.log(obj.getX()) // 1 × 这里返回的立即执行函数的 this 指向的是 window
+  console.log(obj.getY()) // 6
+  ```
+
++ ```js
+   var a = 10; 
+   var obt = { 
+     a: 20, 
+     fn: function(){ 
+       var a = 30; 
+       console.log(this.a)
+     } 
+   }
+   obt.fn();  // 20
+   obt.fn.call(); // 10 
+   (obt.fn)(); // 10 ×
+  // 解析
+  (obt.fn)()， 这里给表达式加了括号，而括号的作用是改变表达式的运算顺序，而在这里加与不加括号并无影响；相当于  obt.fn()，所以会打印出 20；
+  ```
+
++ ```js
+  function a(xx){
+    this.x = xx;
+    return this
+  };
+  var x = a(5);
+  var y = a(6);
+  
+  console.log(x.x)  // 6 × undefined
+  console.log(y.x)  // 6
+  // 解析
+  执行 a(5) 的时候给全局生成了一个全局变量 a 并且赋值为 5,
+  但是随后就被 var x = a(5); 的 x 给覆盖掉了
+  所以 x.x 才是 undefined
+  ```
+
++ ```js
+  function foo(something){
+      this.a = something
+  }
+  
+  var obj1 = {
+      foo: foo
+  }
+  
+  var obj2 = {}
+  
+  obj1.foo(2); 
+  console.log(obj1.a); // 2
+  
+  obj1.foo.call(obj2, 3);
+  console.log(obj2.a); // 3
+  
+  var bar = new obj1.foo(4)
+  console.log(obj1.a); // 2
+  console.log(bar.a); // 4
+  ```
+
++ ```js
+  function foo(something){
+      this.a = something
+  }
+  
+  var obj1 = {}
+  
+  var bar = foo.bind(obj1);
+  bar(2);
+  console.log(obj1.a); // 2
+  
+  var baz = new bar(3);
+  console.log(obj1.a); // 2
+  console.log(baz.a); // 3
+  ```
+
+## 三、作用域&变量提升&闭包
 
