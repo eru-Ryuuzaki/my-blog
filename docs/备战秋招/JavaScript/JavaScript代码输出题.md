@@ -1010,3 +1010,355 @@ resovle1
 
 ## 三、作用域&变量提升&闭包
 
++ ```js
+  (function(){
+     var x = y = 1;
+  })();
+  var z;
+  
+  console.log(y); // 1
+  console.log(z); // undefined
+  console.log(x); // Uncaught ReferenceError: x is not defined
+  // 解析
+  这段代码的关键在于：var x = y = 1; 实际上这里是从右往左执行的，首先执行y = 1, 因为y没有使用var声明，所以它是一个全局变量，然后第二步是将y赋值给x，讲一个全局变量赋值给了一个局部变量，最终，x是一个局部变量，y是一个全局变量，所以打印x是报错。
+  ```
+
++ ```js
+  var a, b
+  (function () {
+     console.log(a);	// undefined
+     console.log(b);	// undefined
+     var a = (b = 3);	
+     console.log(a);	// 3
+     console.log(b);  // 3
+  })()
+  console.log(a);	// undefined
+  console.log(b); // 3
+  ```
+
++ ```js
+  var friendName = 'World';
+  (function() {
+    if (typeof friendName === 'undefined') {
+      var friendName = 'Jack';
+      console.log('Goodbye ' + friendName); // Goodbye Jack
+    } else {
+      console.log('Hello ' + friendName);
+    }
+  })();
+  ```
+
++ ```js
+  function fn1(){
+    console.log('fn1')
+  }
+  var fn2
+   
+  fn1()	// fn1
+  fn2()	// Uncaught TypeError: fn2 is not a function
+   
+  fn2 = function() {
+    console.log('fn2')
+  }
+   
+  fn2()	// fn2 前面报错了所以其实执行不到这里
+  ```
+
++ ```js
+  function a() {
+      var temp = 10;
+      function b() {
+          console.log(temp); 
+      }
+      b();
+  }
+  a();	// Uncaught ReferenceError: temp is not defined
+  
+  function a() {
+      var temp = 10;
+      b();
+  }
+  function b() {
+      console.log(temp); 
+  }
+  a();	// Uncaught ReferenceError: temp is not defined(压根执行不到这里)
+  ```
+
++ ```js
+   var a=3;
+   function c(){
+      alert(a);
+   }
+   (function(){
+    var a=4;
+    c();
+   })();
+  // alert 3	
+  // 解析
+  js中变量的作用域链与定义时的环境有关，与执行时无关。执行环境只会改变this、传递的参数、全局变量等（参考闭包）
+  ```
+
++ ```js
+  function fun(n, o) {
+    console.log(o)
+    return {
+      fun: function(m){
+        return fun(m, n);
+      }
+    };
+  }
+  var a = fun(0);  a.fun(1);  a.fun(2);  a.fun(3); // undefined 0 1 2	×
+  var b = fun(0).fun(1).fun(2).fun(3); // undefined 0 1 2
+  var c = fun(0).fun(1);  c.fun(2);  c.fun(3); // undefined 0 1 2 ×
+  // 正确答案
+  undefined  0  0  0	// 因为 a 对象引用的那个 n 一直是 0
+  undefined  0  1  2  // 因为 b 对象引用的那个 n 一直在更新
+undefined  0  1  1  // 因为 c 对象引用的那个 n 变到 1 就不变了
+  // 解析
+  这是一道关于闭包的题目，对于fun方法，调用之后返回的是一个对象。我们知道，当调用函数的时候传入的实参比函数声明时指定的形参个数要少，剩下的形参都将设置为undefined值。所以 console.log(o); 会输出undefined。而a就是是fun(0)返回的那个对象。也就是说，函数fun中参数 n 的值是0，而返回的那个对象中，需要一个参数n，而这个对象的作用域中没有n，它就继续沿着作用域向上一级的作用域中寻找n，最后在函数fun中找到了n，n的值是0。了解了这一点，其他运算就很简单了，以此类推。
+  ```
+  
++ ```js
+  f = function() {return true;};   
+  g = function() {return false;};   
+  (function() {   
+     if (g() && [] == ![]) {   
+        f = function f() {return false;};   
+        function g() {return true;}   
+     }   
+  })();   
+  console.log(f());	// false
+  // 注意点 1 : [] == ![] 结果是 true
+先看 ![] ，在 JavaScript 中，当用于布尔运算时，比如在这里，对象的非空引用被视为 true，空引用 null 则被视为 false。由于这里不是一个 null, 而是一个没有元素的数组，所以 [] 被视为 true, 而 ![] 的结果就是 false 了。当一个布尔值参与到条件运算的时候，true 会被看作 1, 而 false 会被看作 0。现在条件变成了 [] == 0 的问题了，当一个对象参与条件比较的时候，它会被求值，求值的结果是数组成为一个字符串，[] 的结果就是 '' ，而 '' 会被当作 0 ，所以，条件成立。
+  // 注意点 2: 在 if 语句的条件判断时，就已经进行了变量提升，所以 g() 返回的是 true
+  ```
+  
+  
+
+## 四、原型&继承
+
++ ```js
+  function Person(name) {
+      this.name = name
+  }
+  var p2 = new Person('king');	
+  console.log(p2.__proto__) // Person.prototype
+  console.log(p2.__proto__.__proto__) // Funtion.prototype ×   Object.prototype
+  console.log(p2.__proto__.__proto__.__proto__) // Object.prototype	×  	null
+  console.log(p2.__proto__.__proto__.__proto__.__proto__) // null × 报错
+  console.log(p2.__proto__.__proto__.__proto__.__proto__.__proto__) // 报错
+  console.log(p2.constructor) // Person
+  console.log(p2.prototype) // 函数才有好吧！× 没报错 => undefined p2是实例，没有prototype属性
+  console.log(Person.constructor) // Function
+  console.log(Person.prototype) // Person.prototype
+  console.log(Person.prototype.constructor) // Person
+  console.log(Person.prototype.__proto__) // Object.prototype
+  console.log(Person.__proto__)  // Function.prototype
+  console.log(Function.prototype.__proto__) // Object.prototype
+  console.log(Function.__proto__)  // Object.prototype × Function.prototype
+  console.log(Object.__proto__) // null × Function.prototype
+  console.log(Object.prototype.__proto__) // Object.prototype × null
+  // 经典题、建议全文背诵
+  ```
+
++ ```js
+  
+  function Foo () {
+   getName = function () {
+     console.log(1);
+   }
+   return this;
+  }
+  
+  Foo.getName = function () {
+   console.log(2);
+  }
+  
+  Foo.prototype.getName = function () {
+   console.log(3);
+  }
+  
+  var getName = function () {
+   console.log(4);
+  }
+  
+  function getName () {
+   console.log(5);
+  }
+  
+  Foo.getName(); // 2  
+  getName(); // 4     
+  Foo().getName(); // 1        
+  getName(); // 1          
+  new Foo.getName(); // 2    
+  new Foo().getName(); // 3 
+  new new Foo().getName(); // 3
+  ```
+
++ ```js
+  var F = function() {};
+  Object.prototype.a = function() {
+    console.log('a');
+  };
+  Function.prototype.b = function() {
+    console.log('b');
+  }
+  var f = new F();
+  f.a(); // a
+  f.b(); // 报错 Uncaught TypeError: f.b is not a function
+  F.a(); // a
+  F.b(); // b
+  ```
+
++ ```js
+  function Foo(){
+      Foo.a = function(){
+          console.log(1);
+      }
+      this.a = function(){
+          console.log(2)
+      }
+  }
+  
+  Foo.prototype.a = function(){
+      console.log(3);
+  }
+  
+  Foo.a = function(){
+      console.log(4);
+  }
+  
+  Foo.a(); // 4
+  let obj = new Foo();
+  // 这里做错了建议回去复习一下 new 关键词知识捏
+  obj.a(); // 3 × obj.a() ; 调用 obj 实例上的方法 a，该实例上目前有两个 a 方法：一个是内部属性方法，另一个是原型上的方法。当这两者都存在时，首先查找 ownProperty ，如果没有才去原型链上找，所以调用实例上的 a 输出：2
+  Foo.a(); // 1
+  ```
+
++ ```js
+  function Dog() {
+    this.name = 'puppy'
+  }
+  Dog.prototype.bark = () => {
+    console.log('woof!woof!')
+  }
+  const dog = new Dog()
+  console.log(Dog.prototype.constructor === Dog && dog.constructor === Dog && dog instanceof Dog)// true
+  ```
+
++ ```js
+  var A = {n: 4399};
+  var B =  function(){this.n = 9999};
+  var C =  function(){var n = 8888};
+  B.prototype = A;
+  C.prototype = A;
+  var b = new B();
+  var c = new C();
+  A.n++
+  console.log(b.n); // 9999
+  console.log(c.n); // 4400
+  ```
+
++ ```js
+  function A(){
+  }
+  function B(a){
+  　　this.a = a;
+  }
+  function C(a){
+  　　if(a){
+  this.a = a;
+  　　}
+  }
+  A.prototype.a = 1;
+  B.prototype.a = 1;
+  C.prototype.a = 1;
+   
+  console.log(new A().a); // 1
+  console.log(new B().a); // undefined
+  console.log(new C(2).a); // 2
+  ```
+
++ ```js
+  function Parent() {
+      this.a = 1;
+      this.b = [1, 2, this.a];
+      this.c = { demo: 5 };
+      this.show = function () {
+          console.log(this.a , this.b , this.c.demo );
+      }
+  }
+  
+  function Child() {
+      this.a = 2;
+      this.change = function () {
+          this.b.push(this.a);
+          this.a = this.b.length;
+          this.c.demo = this.a++;
+      }
+  }
+  
+  Child.prototype = new Parent();
+  var parent = new Parent();
+  var child1 = new Child();
+  var child2 = new Child();
+  child1.a = 11;
+  child2.a = 12;
+  // 错太多了，直接看解析吧
+  parent.show(); // 1 [1, 2, 1] 5
+  // 应该是和闭包原理类似
+  child1.show(); // 11 [1, 2, 11] 5 ×
+  child2.show(); // 12 [1, 2, 12] 5 ×
+  child1.change(); 
+  child2.change();
+  parent.show(); // 1 [1, 2, 1, 11, 12] 12 ×
+  child1.show(); // 5 [1, 2, 1, 11, 12] 12 ×
+  child2.show(); // 6 [1, 2, 1, 11, 12] 12 ×
+  // 正确答案
+  parent.show(); // 1  [1,2,1] 5
+  
+  child1.show(); // 11 [1,2,1] 5
+  child2.show(); // 12 [1,2,1] 5
+  
+  parent.show(); // 1 [1,2,1] 5
+  
+  child1.show(); // 5 [1,2,1,11,12] 5
+  
+  child2.show(); // 6 [1,2,1,11,12] 5
+  // 解析
+  1. parent.show()，可以直接获得所需的值，没啥好说的；
+  2. child1.show()，Child的构造函数原本是指向Child的，题目显式将Child类的原型对象指向了Parent类的一个实例，需要注意Child.prototype指向的是Parent的实例parent，而不是指向Parent这个类。
+  3. child2.show()，这个也没啥好说的；
+  4. parent.show()，parent是一个Parent类的实例，Child.prorotype指向的是Parent类的另一个实例，两者在堆内存中互不影响，所以上述操作不影响parent实例，所以输出结果不变；
+  5. child1.show()，child1执行了change()方法后，发生了怎样的变化呢?
+  ● this.b.push(this.a)，由于this的动态指向特性，this.b会指向Child.prototype上的b数组,this.a会指向child1的a属性,所以Child.prototype.b变成了[1,2,1,11];
+  ● this.a = this.b.length，这条语句中this.a和this.b的指向与上一句一致，故结果为child1.a变为4;
+  ● this.c.demo = this.a++，由于child1自身属性并没有c这个属性，所以此处的this.c会指向Child.prototype.c，this.a值为4，为原始类型，故赋值操作时会直接赋值，Child.prototype.c.demo的结果为4，而this.a随后自增为5(4 + 1 = 5)。
+  6. child2执行了change()方法, 而child2和child1均是Child类的实例，所以他们的原型链指向同一个原型对象Child.prototype,也就是同一个parent实例，所以child2.change()中所有影响到原型对象的语句都会影响child1的最终输出结果。
+  ● this.b.push(this.a)，由于this的动态指向特性，this.b会指向Child.prototype上的b数组,this.a会指向child2的a属性,所以Child.prototype.b变成了[1,2,1,11,12];
+  ● this.a = this.b.length，这条语句中this.a和this.b的指向与上一句一致，故结果为child2.a变为5;
+  ● this.c.demo = this.a++，由于child2自身属性并没有c这个属性，所以此处的this.c会指向Child.prototype.c，故执行结果为Child.prototype.c.demo的值变为child2.a的值5，而child2.a最终自增为6(5 + 1 = 6)。
+  ```
+
++ ```js
+  function SuperType(){
+      this.property = true;
+  }
+  
+  SuperType.prototype.getSuperValue = function(){
+      return this.property;
+  };
+  
+  function SubType(){
+      this.subproperty = false;
+  }
+  
+  SubType.prototype = new SuperType();
+  SubType.prototype.getSubValue = function (){
+      return this.subproperty;
+  };
+  
+  var instance = new SubType();
+  console.log(instance.getSuperValue()); // true
+  ```
+
