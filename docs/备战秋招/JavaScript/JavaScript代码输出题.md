@@ -156,7 +156,8 @@
   }).catch(err => {
     console.log("catch: ", err)
   })
-  > catch: Error: error!!!
+  // print
+  catch: Error: error!!!
   ```
 + ```js
   const promise = Promise.resolve().then(() => {
