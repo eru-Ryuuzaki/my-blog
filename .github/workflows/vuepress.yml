@@ -7,7 +7,7 @@ jobs:
   deploy-githubpage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2.5.0
       - run: npm install --legacy-peer-deps
       - run: npm run docs:build
       - name: Deploy
