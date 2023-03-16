@@ -5,7 +5,7 @@ heroText: Ryuuzaki 的个人博客 # 首页的标题内容
 heroImage: /Camille.jpg # 首页图片
 tagline: welcome~
 actionText: Get Started → # 首页跳转按钮的内容
-actionLink: /备战秋招/
+actionLink: /学习笔记/
 features: #  表明首页的特征，固定的格式为title + details，以三栏流式布局的方式展示
   - title: 博客
     details: 专注前端学习，记录点点滴滴
@@ -13,10 +13,6 @@ features: #  表明首页的特征，固定的格式为title + details，以三�
     details: 一个前端工程师。
   - title: 技能
     details: Vue 全家桶
-
 ---
 
 <div style="text-align:center">莫忘少年凌云志,曾许人间第一流</div>
-
-
-
