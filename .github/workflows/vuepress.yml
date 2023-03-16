@@ -1,10 +1,4 @@
-name: Setup Node.js environment
-uses: actions/setup-node@v2
-with:
-  node-version: "14"
-  openssl-version: "1.1.1l"
-
-# name: myBlog GitHub Actions
+name: myBlog GitHub Actions
 on:
   push:
     branches:
@@ -15,6 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2.5.0
       - run: npm install --legacy-peer-deps
+      - name: Update Browserslist
+        run: npx browserslist@latest --update-db
       - run: npm run docs:build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
